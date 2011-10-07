@@ -30,7 +30,7 @@ V ?= 99
 T =
 MAKE_SRC = make -j$(J) V=$(V)
 
-.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build $(HW_AVAILABLE)
+.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build
 
 define build_src
 	cd $1/$2 && $(MAKE_SRC)
@@ -116,7 +116,6 @@ config:
 	select HW in alix rs rspro x86 fonera nsm5 nsm2; do break; done; echo $HW > .config.tmp;
 	mv .config.tmp .config 
 
-build: HW_DEST:=$(T)
 build: checkout
 	$(if $(T),$(call build_src,$(BUILD_DIR),$(T)))
 
