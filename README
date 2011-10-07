@@ -1,0 +1,9 @@
+[Q]uick[M]esh[P]roject firmware generator
+Generates openwrt firmware images to flash your device
+
+Available options:
+	make <destination>: Do all necessary to compile firmware for this target. Destinations could be: rspro alix ns ...
+	make update: Update sources from QMP and feeds
+	make clean: Clean code
+	make config: Interactive configuration (not implemented yet)
+
