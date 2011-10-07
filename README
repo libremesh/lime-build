@@ -1,9 +1,78 @@
-[Q]uick[M]esh[P]roject firmware generator
-Generates openwrt firmware images to flash your device
+[qmpfw]
 
-Available options:
-	make <destination>: Do all necessary to compile firmware for this target. Destinations could be: rspro alix ns ...
-	make update: Update sources from QMP and feeds
-	make clean: Clean code
-	make config: Interactive configuration (not implemented yet)
+Qmpfw is a tool for developers to create a development enviroment for qMp.
+
+Basically it consists in one Makefile, so it is called using "make" command.
+
+
+** Download the code
+
+Read Only URL:
+http://qmp.cat/git/qmpfw.git
+
+Developer URL:
+ssh://gitosis@qmp.cat:221/qmpfw.git
+
+
+** Directory structure
+
+There are several directories. This is the functionallity for each of them:
+
+    build: here you will have all needed sources
+
+    build/configs: if you do some change in config file using "menuconfig" option, the new config is placed here (and also in destination target)
+
+    dl: download folder for OpenWRT packages
+
+    configs: config files for each kind of hardware. These are the default ones provided by qmpfw
+
+
+** Command options
+
+To compile a qMp image from scratch, you need to specify the target (next example with target=rspro):
+This command will run all necessary commands to compile the image. After the compilation you can see the OpenWRT code in directory: build/[target]
+
+    make T=rspro build
+
+Also you can specify the number of parallel processes for compilation and the verbose level:
+
+    make V=99 J=2 T=rspro build
+
+To see list of avaiable targets run:
+
+    make list_targets
+
+To update targets (this will update qmp and eigennet feeds, not openwrt source):
+This will update all targets
+
+    make update
+
+This will update only rspro target
+
+    make T=rspro update
+
+To run menuconfig (from openwrt):
+
+    make T=rspro menuconfig
+
+After that, the new config file will be applied to destination target and also it will by copied inside build/configs directory
+To run kernel menuconfig (from openwrt):
+
+    make T=rspro kernel_menuconfig
+
+TODO: copy kernel config file in build/configs directory
+To clean specific target:
+
+    make T=rspro clean
+
+To clean all targets:
+
+    make clean
+
+To configure some general parameters from qMp you can run:
+
+    make config
+
+TODO: This feature is missing
+
 
