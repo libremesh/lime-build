@@ -30,14 +30,17 @@ J ?= 1
 V ?= 99
 T =
 MAKE_SRC = make -j$(J) V=$(V)
-TIMESTAMP = $(shell date +%d%m%y_%H%M)
 
 include targets.mk
+
+TIMESTAMP = $(shell date +%d%m%y_%H%M)
+CONFIG = $(BUILD_DIR)/$(T)/.config
+KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build
 
 define build_src
-	cd $1/$2 && $(MAKE_SRC)
+	cd $(BUILD_DIR)/$(T) && $(MAKE_SRC)
 endef
 
 define checkout_src
@@ -48,31 +51,32 @@ define checkout_src
 	rm -rf $(BUILD_DIR)/$(T)/feeds/
 	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(T)/
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(T)/feeds.conf
-	cp -f $(CONFIG_DIR)/$(T)/config $(BUILD_DIR)/$(T)/.config
+	cp -f $(CONFIG_DIR)/$(T)/config $(CONFIG)
+	[ -f $(CONFIG_DIR)/$(T)/kernel_config ] && cp -f $(CONFIG_DIR)/$(T)/kernel_config $(KCONFIG) || true
 endef
 
 define update_feeds
-	@echo "Updateing feed $(1)"
-	./$(BUILD_DIR)/$1/scripts/feeds update -a
-	./$(BUILD_DIR)/$1/scripts/feeds install -a
+	@echo "Updateing feed $(T)"
+	#./$(BUILD_DIR)/$(T)/scripts/feeds update -a
+	#./$(BUILD_DIR)/$(T)/scripts/feeds install -a
 endef
 
 define menuconfig_owrt
-	cd $(BUILD_DIR)/$1 && make menuconfig
-	[ ! -d $(MY_CONFIGS)/$1 ] && mkdir -p $(MY_CONFIGS)/$1 || true
-	cp -f $(BUILD_DIR)/$1/.config $(MY_CONFIGS)/$1/config
+	cd $(BUILD_DIR)/$(T) && make menuconfig
+	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
+	cp -f $(CONFIG) $(MY_CONFIGS)/$(T)/config
 endef
 
 define kmenuconfig_owrt
-	cd $(BUILD_DIR)/$1 && make kernel_menuconfig
-	[ ! -d $(MY_CONFIGS)/$1 ] && mkdir -p $(MY_CONFIGS)/$1 || true
-	cp -f $(BUILD_DIR)/$1/target/linux/$(ARCH)/config-* $(MY_CONFIGS)/$1/kernel_config
+	cd $(BUILD_DIR)/$(T) && make kernel_menuconfig
+	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
+	cp -f $(KCONFIG) $(MY_CONFIGS)/$(T)/kernel_config
 endef
 
 define post_build
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	cp -f $(BUILD_DIR)/$1/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
-	cp -f $(BUILD_DIR)/$1/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
 	@echo 
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
 endef
@@ -84,8 +88,8 @@ define clean_all
 endef
 
 define clean_target
-	[ -d "$(BUILD_DIR)/$1" ] && rm -rf $(BUILD_DIR)/$1 || true
-	rm -f .checkout_$1 2>/dev/null || true
+	[ -d "$(BUILD_DIR)/$(T)" ] && rm -rf $(BUILD_DIR)/$(T) || true
+	rm -f .checkout_$(T) 2>/dev/null || true
 endef
 
 define target_error
@@ -106,7 +110,7 @@ endef
 checkout: .checkout_qmp .checkout_eig 
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
-	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
+	$(if $(wildcard .checkout_$(T)),,$(call update_feeds))
 	@touch .checkout_$(T)
 	
 update: .checkout_eig .checkout_qmp
@@ -116,13 +120,13 @@ update: .checkout_eig .checkout_qmp
 	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
 menuconfig: checkout
-	$(call menuconfig_owrt,$(T))
+	$(call menuconfig_owrt)
 	
 kernel_menuconfig: checkout
-	$(call kmenuconfig_owrt,$(T))
+	$(call kmenuconfig_owrt)
 
 clean:
-	$(if $(T),$(call clean_target,$(T)),$(call clean_all))
+	$(if $(T),$(call clean_target),$(call clean_all))
 
 list_targets:
 	$(info $(HW_AVAILABLE))
@@ -133,6 +137,6 @@ config:
 	mv .config.tmp .config 
 
 build: checkout
-	$(if $(T),$(call build_src,$(BUILD_DIR),$(T)))
-	$(call post_build,$(T))
+	$(if $(T),$(call build_src))
+	$(call post_build)
 
