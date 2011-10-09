@@ -25,7 +25,8 @@ There are several directories. This is the functionallity for each of them:
     dl: download folder for OpenWRT packages
 
     configs: config files for each kind of hardware. These are the default ones provided by qmpfw
-
+    
+    images: output directory for images compiled by qmpfw
 
 ** Command options
 
@@ -60,7 +61,6 @@ To run kernel menuconfig (from openwrt):
 
     make T=rspro kernel_menuconfig
 
-TODO: copy kernel config file in build/configs directory
 To clean specific target:
 
     make T=rspro clean
@@ -72,7 +72,6 @@ To clean all targets:
 To configure some general parameters from qMp you can run:
 
     make config
-
 TODO: This feature is missing
 
 

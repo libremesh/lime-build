@@ -24,12 +24,15 @@ EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
-HW_AVAILABLE = alix rs rspro x86 fonera nsm5 nsm2
+IMAGES = images
 SHELL = bash
 J ?= 1
 V ?= 99
 T =
 MAKE_SRC = make -j$(J) V=$(V)
+TIMESTAMP = $(shell date +%d%m%y_%H%M)
+
+include targets.mk
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build
 
@@ -56,21 +59,32 @@ endef
 
 define menuconfig_owrt
 	cd $(BUILD_DIR)/$1 && make menuconfig
-	[ ! -d $(MY_CONFIGS)/$1 ] && mkdir -p $(MY_CONFIGS)/$1
+	[ ! -d $(MY_CONFIGS)/$1 ] && mkdir -p $(MY_CONFIGS)/$1 || true
 	cp -f $(BUILD_DIR)/$1/.config $(MY_CONFIGS)/$1/config
 endef
 
 define kmenuconfig_owrt
 	cd $(BUILD_DIR)/$1 && make kernel_menuconfig
+	[ ! -d $(MY_CONFIGS)/$1 ] && mkdir -p $(MY_CONFIGS)/$1 || true
+	cp -f $(BUILD_DIR)/$1/target/linux/$(ARCH)/config-* $(MY_CONFIGS)/$1/kernel_config
+endef
+
+define post_build
+	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
+	cp -f $(BUILD_DIR)/$1/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$1/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
+	@echo 
+	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
 endef
 
 define clean_all
-	[ -d "$(BUILD_DIR)" ] && rm -rf $(BUILD_DIR)/*
+	[ -d "$(BUILD_DIR)" ] && rm -rf $(BUILD_DIR)/* || true
 	rm -f .checkout_* 2>/dev/null || true
+	[ -d "$(BUILD_DIR)" ] && rm -f $(IMAGES)/* || true
 endef
 
 define clean_target
-	[ -d "$(BUILD_DIR)/$1" ] && rm -rf $(BUILD_DIR)/$1
+	[ -d "$(BUILD_DIR)/$1" ] && rm -rf $(BUILD_DIR)/$1 || true
 	rm -f .checkout_$1 2>/dev/null || true
 endef
 
@@ -83,17 +97,17 @@ endef
 .checkout_qmp:
 	git clone $(QMP_GIT) $(BUILD_DIR)/qmp
 	cd $(BUILD_DIR)/qmp; git checkout --track origin/$(QMP_GIT_BRANCH); cd ..
-	touch $@
+	@touch $@
 
 .checkout_eig:
 	git clone $(EIGENNET_GIT) $(BUILD_DIR)/eigennet/packages
-	touch $@
+	@touch $@
 
 checkout: .checkout_qmp .checkout_eig 
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
 	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
-	touch .checkout_$(T)
+	@touch .checkout_$(T)
 	
 update: .checkout_eig .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
@@ -111,7 +125,8 @@ clean:
 	$(if $(T),$(call clean_target,$(T)),$(call clean_all))
 
 list_targets:
-	@echo $(HW_AVAILABLE)
+	$(info $(HW_AVAILABLE))
+	@exit 0
 
 config:
 	select HW in alix rs rspro x86 fonera nsm5 nsm2; do break; done; echo $HW > .config.tmp;
@@ -119,5 +134,5 @@ config:
 
 build: checkout
 	$(if $(T),$(call build_src,$(BUILD_DIR),$(T)))
-
+	$(call post_build,$(T))
 
