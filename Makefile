@@ -57,8 +57,8 @@ endef
 
 define update_feeds
 	@echo "Updateing feed $(T)"
-	#./$(BUILD_DIR)/$(T)/scripts/feeds update -a
-	#./$(BUILD_DIR)/$(T)/scripts/feeds install -a
+	./$(BUILD_DIR)/$(T)/scripts/feeds update -a
+	./$(BUILD_DIR)/$(T)/scripts/feeds install -a
 endef
 
 define menuconfig_owrt
