@@ -140,3 +140,5 @@ build: checkout
 	$(if $(T),$(call build_src))
 	$(call post_build)
 
+all: build
+
