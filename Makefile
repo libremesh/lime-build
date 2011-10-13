@@ -142,3 +142,4 @@ build: checkout
 
 all: build
 
+default: build
