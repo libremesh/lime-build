@@ -27,7 +27,7 @@ MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
 J ?= 1
-V ?= 99
+V ?= 0
 T =
 MAKE_SRC = make -j$(J) V=$(V)
 
@@ -140,3 +140,6 @@ build: checkout
 	$(if $(T),$(call build_src))
 	$(call post_build)
 
+all: build
+
+default: build
