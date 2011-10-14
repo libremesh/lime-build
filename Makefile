@@ -75,8 +75,8 @@ endef
 
 define post_build
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
-	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(T)-factory-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(T)-upgrade-$(TIMESTAMP).bin
 	@echo 
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
 endef
