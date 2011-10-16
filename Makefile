@@ -26,6 +26,7 @@ CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
+QMP_FEED = package/feeds/qmp_packages
 J ?= 1
 V ?= 0
 T =
@@ -37,7 +38,7 @@ TIMESTAMP = $(shell date +%d%m%y_%H%M)
 CONFIG = $(BUILD_DIR)/$(T)/.config
 KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
-.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build
+.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
 define build_src
 	cd $(BUILD_DIR)/$(T) && $(MAKE_SRC)
@@ -92,6 +93,11 @@ define clean_target
 	rm -f .checkout_$(T) 2>/dev/null || true
 endef
 
+define clean_pkg
+	echo "Cleaning package $1"
+	make $1/clean 	
+endef
+
 define target_error
 	@echo "You must specify target using T var (make T=alix build)"
 	@echo "To see avialable targets run: make list_targets"
@@ -127,6 +133,10 @@ kernel_menuconfig: checkout
 
 clean:
 	$(if $(T),$(call clean_target),$(call clean_all))
+
+clean_qmp:
+	cd $(BUILD_DIR)/$(T) ; \
+	for d in $(QMP_FEED)/*; do make $$d/clean ; done
 
 list_targets:
 	$(info $(HW_AVAILABLE))

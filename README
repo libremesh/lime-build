@@ -1,22 +1,18 @@
 [qmpfw]
 
 Qmpfw is a tool for developers to create a development enviroment for qMp.
-
 Basically it consists in one Makefile, so it is called using "make" command.
 
+Read Only URL: http://qmp.cat/git/qmpfw.git
+Developer URL: ssh://gitosis@qmp.cat:221/qmpfw.git
 
-** Download the code
+*Directory structure
 
-Read Only URL:
-http://qmp.cat/git/qmpfw.git
+There are several directories and files. This is the functionallity for each of them:
 
-Developer URL:
-ssh://gitosis@qmp.cat:221/qmpfw.git
+    Makefile: the main makefile
 
-
-** Directory structure
-
-There are several directories. This is the functionallity for each of them:
+    targets.mk: file which contains all information related with targets. If you want to add a new supported device you must edit it
 
     build: here you will have all needed sources
 
@@ -25,10 +21,10 @@ There are several directories. This is the functionallity for each of them:
     dl: download folder for OpenWRT packages
 
     configs: config files for each kind of hardware. These are the default ones provided by qmpfw
-    
-    images: output directory for images compiled by qmpfw
 
-** Command options
+    images: output directory for compiled images, each of them has a different timestamp, so you can have as many as you want
+
+*Command options
 
 To compile a qMp image from scratch, you need to specify the target (next example with target=rspro):
 This command will run all necessary commands to compile the image. After the compilation you can see the OpenWRT code in directory: build/[target]
@@ -43,10 +39,10 @@ To see list of avaiable targets run:
 
     make list_targets
 
-To update targets (this will update qmp and eigennet feeds, not openwrt source):
 This will update all targets
 
     make update
+    (this will update qmp and eigennet feeds, not openwrt source)
 
 This will update only rspro target
 
@@ -61,6 +57,10 @@ To run kernel menuconfig (from openwrt):
 
     make T=rspro kernel_menuconfig
 
+To run the initial checkout:
+
+    make T=rspro checkout
+
 To clean specific target:
 
     make T=rspro clean
@@ -69,9 +69,15 @@ To clean all targets:
 
     make clean
 
+To clean just qmp packages from a target
+
+    make T=rspro clean_qmp
+
 To configure some general parameters from qMp you can run:
 
     make config
+
 TODO: This feature is missing
+
 
 
