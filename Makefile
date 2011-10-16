@@ -52,6 +52,9 @@ define checkout_src
 	rm -rf $(BUILD_DIR)/$(T)/feeds/
 	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(T)/
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(T)/feeds.conf
+endef
+
+define copy_config
 	cp -f $(CONFIG_DIR)/$(T)/config $(CONFIG)
 	[ -f $(CONFIG_DIR)/$(T)/kernel_config ] && cp -f $(CONFIG_DIR)/$(T)/kernel_config $(KCONFIG) || true
 endef
@@ -117,6 +120,7 @@ checkout: .checkout_qmp .checkout_eig
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
 	$(if $(wildcard .checkout_$(T)),,$(call update_feeds))
+	$(if $(wildcard .checkout_$(T)),,$(call copy_config))
 	@touch .checkout_$(T)
 	
 update: .checkout_eig .checkout_qmp
