@@ -21,6 +21,7 @@ OWRT_SVN_REV = 27617
 QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_BRANCH = autoconfig
 EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
+EIGENNET_GIT_REV = 7467D68855991FE35797B0A5958B000F65C0134F
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
@@ -114,6 +115,7 @@ endef
 
 .checkout_eig:
 	git clone $(EIGENNET_GIT) $(BUILD_DIR)/eigennet/packages
+	cd $(BUILD_DIR)/eigennet/packages && git reset --hard $(EIGENNET_GIT_REV)
 	@touch $@
 
 checkout: .checkout_qmp .checkout_eig 
@@ -125,7 +127,7 @@ checkout: .checkout_qmp .checkout_eig
 	
 update: .checkout_eig .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
-	cd $(BUILD_DIR)/eigennet/packages && git pull
+#	cd $(BUILD_DIR)/eigennet/packages && git pull
 	$(if $(T),HW_AVAILABLE=$(T)) 
 	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
