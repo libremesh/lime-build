@@ -42,11 +42,15 @@ To see list of avaiable targets run:
 This will update all targets
 
     make update
-    (this will update qmp and eigennet feeds, not openwrt source)
+    (this will update only qmp source)
 
 This will update only rspro target
 
     make T=rspro update
+
+This will update all sources (qmp, openwrt feeds and eighennet)
+
+    make update_all
 
 To run menuconfig (from openwrt):
 

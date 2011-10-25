@@ -22,7 +22,7 @@ ifeq ($(T),rs)
 endif
 
 ifeq ($(T),alix)
-  NAME:=Alix 
+  NAME:=Alix
   ARCH:=x86
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img

@@ -61,9 +61,9 @@ define copy_config
 endef
 
 define update_feeds
-	@echo "Updateing feed $(T)"
-	./$(BUILD_DIR)/$(T)/scripts/feeds update -a
-	./$(BUILD_DIR)/$(T)/scripts/feeds install -a
+	@echo "Updating feed $(1)"
+	./$(BUILD_DIR)/$(1)/scripts/feeds update -a
+	./$(BUILD_DIR)/$(1)/scripts/feeds install -a
 endef
 
 define menuconfig_owrt
@@ -80,8 +80,8 @@ endef
 
 define post_build
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(T)-factory-$(TIMESTAMP).bin
-	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(T)-upgrade-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
+	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
 	@echo 
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
 endef
@@ -121,13 +121,15 @@ endef
 checkout: .checkout_qmp .checkout_eig 
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
-	$(if $(wildcard .checkout_$(T)),,$(call update_feeds))
+	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
 	$(if $(wildcard .checkout_$(T)),,$(call copy_config))
 	@touch .checkout_$(T)
 	
 update: .checkout_eig .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
 #	cd $(BUILD_DIR)/eigennet/packages && git pull
+
+update_all: update
 	$(if $(T),HW_AVAILABLE=$(T)) 
 	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
