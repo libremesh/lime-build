@@ -19,7 +19,7 @@
 OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
 OWRT_SVN_REV = 27617
 QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
-QMP_GIT_BRANCH = autoconfig
+QMP_GIT_BRANCH = master
 EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
 EIGENNET_GIT_REV = 7467D68855991FE35797B0A5958B000F65C0134F
 BUILD_DIR = build
@@ -110,7 +110,7 @@ endef
 
 .checkout_qmp:
 	git clone $(QMP_GIT) $(BUILD_DIR)/qmp
-	cd $(BUILD_DIR)/qmp; git checkout --track origin/$(QMP_GIT_BRANCH); cd ..
+	cd $(BUILD_DIR)/qmp; git checkout $(QMP_GIT_BRANCH); cd ..
 	@touch $@
 
 .checkout_eig:
