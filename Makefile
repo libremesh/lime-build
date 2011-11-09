@@ -31,7 +31,7 @@ QMP_FEED = package/feeds/qmp_packages
 J ?= 1
 V ?= 0
 T =
-MAKE_SRC = make -j$(J) V=$(V)
+MAKE_SRC = -j$(J) V=$(V)
 
 include targets.mk
 
@@ -39,10 +39,12 @@ TIMESTAMP = $(shell date +%d%m%y_%H%M)
 CONFIG = $(BUILD_DIR)/$(T)/.config
 KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
+
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
+
 define build_src
-	cd $(BUILD_DIR)/$(T) && $(MAKE_SRC)
+	make -C $(BUILD_DIR)/$(T) $(MAKE_SRC) BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git status -b -s |grep ^##|cut -d " " -f 2) REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1)
 endef
 
 define checkout_src
@@ -67,13 +69,13 @@ define update_feeds
 endef
 
 define menuconfig_owrt
-	cd $(BUILD_DIR)/$(T) && make menuconfig
+	make -C $(BUILD_DIR)/$(T) menuconfig
 	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
 	cp -f $(CONFIG) $(MY_CONFIGS)/$(T)/config
 endef
 
 define kmenuconfig_owrt
-	cd $(BUILD_DIR)/$(T) && make kernel_menuconfig
+	make -C $(BUILD_DIR)/$(T) kernel_menuconfig
 	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
 	cp -f $(KCONFIG) $(MY_CONFIGS)/$(T)/kernel_config
 endef
