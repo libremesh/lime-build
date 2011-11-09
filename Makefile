@@ -44,7 +44,7 @@ KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-*
 
 
 define build_src
-	make -C $(BUILD_DIR)/$(T) $(MAKE_SRC) BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git status -b -s |grep ^##|cut -d " " -f 2) REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1)
+	make -C $(BUILD_DIR)/$(T) $(MAKE_SRC) BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2) REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1)
 endef
 
 define checkout_src
