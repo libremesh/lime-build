@@ -28,3 +28,10 @@ ifeq ($(T),alix)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
 endif
 
+ifeq ($(T),nsm5)
+  NAME:=NanoStationM5
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
+endif
+
