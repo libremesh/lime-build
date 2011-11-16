@@ -18,12 +18,13 @@
 
 OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
 OWRT_SVN_REV = 27617
+OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
 QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_BRANCH = master
 EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
 EIGENNET_GIT_REV = 7467D68855991FE35797B0A5958B000F65C0134F
-#B6M_GIT = git://qmp.cat/b6m.git
-#B6M_GIT_BRANCH = openwrt
+B6M_GIT = git://qmp.cat/b6m.git
+B6M_GIT_BRANCH = openwrt
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
@@ -124,18 +125,21 @@ endef
 
 .checkout_b6m:
 	git clone $(B6M_GIT) $(BUILD_DIR)/b6m
-	cd $(BUILD_DIR)/qmp; git checkout --track origin/$(B6M_GIT_BRANCH); cd ..
+	cd $(BUILD_DIR)/b6m; git checkout --track origin/$(B6M_GIT_BRANCH); cd ..
 	@touch $@	
 
-checkout: .checkout_qmp .checkout_eig 
+.checkout_owrt_pkg:
+	svn --quiet co -r ${OWRT_SVN_REV} ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
+	@touch $@
+
+checkout: .checkout_owrt_pkg .checkout_qmp .checkout_eig .checkout_b6m 
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
 	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
 	$(if $(wildcard .checkout_$(T)),,$(call copy_config))
 	@touch .checkout_$(T)
 	
-update: .checkout_eig .checkout_qmp
-# update: .checkout_eig .checkout_qmp .checkout_b6m
+update: .checkout_owrt_pkg .checkout_eig .checkout_qmp .checkout_b6m
 	cd $(BUILD_DIR)/qmp && git pull
 #	cd $(BUILD_DIR)/eigennet/packages && git pull
 
