@@ -17,7 +17,7 @@
 #
 
 OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
-OWRT_SVN_REV = 27617
+OWRT_SVN_REV = 29182
 QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_BRANCH = master
 EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
