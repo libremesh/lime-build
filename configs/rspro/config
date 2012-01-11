@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # OpenWrt version: Attitude Adjustment (r29701)
-# Wed Jan 11 01:10:59 2012
+# Wed Jan 11 16:59:34 2012
 #
 CONFIG_HAVE_DOT_CONFIG=y
 # CONFIG_TARGET_ppc40x is not set
@@ -1632,7 +1632,7 @@ CONFIG_PACKAGE_kmod-ledtrig-usbdev=y
 # Libraries
 #
 CONFIG_PACKAGE_kmod-lib-crc-ccitt=y
-# CONFIG_PACKAGE_kmod-lib-crc-itu-t is not set
+CONFIG_PACKAGE_kmod-lib-crc-itu-t=y
 # CONFIG_PACKAGE_kmod-lib-crc16 is not set
 # CONFIG_PACKAGE_kmod-lib-crc32c is not set
 # CONFIG_PACKAGE_kmod-lib-crc7 is not set
@@ -1778,10 +1778,10 @@ CONFIG_PACKAGE_kmod-tun=y
 #
 # Other modules
 #
-# CONFIG_PACKAGE_kmod-bcma is not set
+CONFIG_PACKAGE_kmod-bcma=y
 # CONFIG_PACKAGE_kmod-bluetooth is not set
 CONFIG_PACKAGE_kmod-button-hotplug=y
-# CONFIG_PACKAGE_kmod-eeprom-93cx6 is not set
+CONFIG_PACKAGE_kmod-eeprom-93cx6=y
 # CONFIG_PACKAGE_kmod-eeprom-at24 is not set
 # CONFIG_PACKAGE_kmod-eeprom-at25 is not set
 # CONFIG_PACKAGE_kmod-gpio-dev is not set
@@ -1806,7 +1806,7 @@ CONFIG_PACKAGE_kmod-input-polldev=y
 # CONFIG_PACKAGE_kmod-rtc-pcf2123 is not set
 # CONFIG_PACKAGE_kmod-rtc-pcf8563 is not set
 # CONFIG_PACKAGE_kmod-softdog is not set
-# CONFIG_PACKAGE_kmod-ssb is not set
+CONFIG_PACKAGE_kmod-ssb=y
 # CONFIG_PACKAGE_kmod-zaptel14 is not set
 # CONFIG_PACKAGE_kmod-zaptel14-dummy is not set
 # CONFIG_PACKAGE_kmod-zaptel14-wctdm is not set
@@ -1841,7 +1841,16 @@ CONFIG_PACKAGE_kmod-input-polldev=y
 # CONFIG_PACKAGE_kmod-usb-cm109 is not set
 CONFIG_PACKAGE_kmod-usb-core=y
 # CONFIG_PACKAGE_kmod-usb-hid is not set
-# CONFIG_PACKAGE_kmod-usb-net is not set
+CONFIG_PACKAGE_kmod-usb-net=y
+# CONFIG_PACKAGE_kmod-usb-net-asix is not set
+# CONFIG_PACKAGE_kmod-usb-net-cdc-ether is not set
+# CONFIG_PACKAGE_kmod-usb-net-dm9601-ether is not set
+# CONFIG_PACKAGE_kmod-usb-net-hso is not set
+# CONFIG_PACKAGE_kmod-usb-net-kaweth is not set
+# CONFIG_PACKAGE_kmod-usb-net-mcs7830 is not set
+# CONFIG_PACKAGE_kmod-usb-net-pegasus is not set
+# CONFIG_PACKAGE_kmod-usb-net-rndis is not set
+# CONFIG_PACKAGE_kmod-usb-net-sierrawireless is not set
 CONFIG_PACKAGE_kmod-usb-ohci=y
 # CONFIG_PACKAGE_kmod-usb-phidget is not set
 # CONFIG_PACKAGE_kmod-usb-printer is not set
@@ -1849,7 +1858,7 @@ CONFIG_PACKAGE_kmod-usb-ohci=y
 # CONFIG_PACKAGE_kmod-usb-sierrawireless-directip is not set
 # CONFIG_PACKAGE_kmod-usb-storage is not set
 # CONFIG_PACKAGE_kmod-usb-storage-extras is not set
-# CONFIG_PACKAGE_kmod-usb-uhci is not set
+CONFIG_PACKAGE_kmod-usb-uhci=y
 # CONFIG_PACKAGE_kmod-usb-video is not set
 # CONFIG_PACKAGE_kmod-usb-yealink is not set
 CONFIG_PACKAGE_kmod-usb2=y
@@ -1883,15 +1892,31 @@ CONFIG_PACKAGE_kmod-ath=y
 #
 # Configuration
 #
-# CONFIG_ATH_USER_REGD is not set
+CONFIG_ATH_USER_REGD=y
 # CONFIG_PACKAGE_ATH_DEBUG is not set
 CONFIG_PACKAGE_kmod-ath5k=y
 CONFIG_PACKAGE_kmod-ath9k=y
 CONFIG_PACKAGE_kmod-ath9k-common=y
-# CONFIG_PACKAGE_kmod-ath9k-htc is not set
-# CONFIG_PACKAGE_kmod-b43 is not set
+CONFIG_PACKAGE_kmod-ath9k-htc=y
+CONFIG_PACKAGE_kmod-b43=y
+
+#
+# Configuration
+#
+# CONFIG_B43_FW_4_150 is not set
+# CONFIG_B43_FW_4_178 is not set
+CONFIG_B43_FW_5_10=y
+# CONFIG_B43_FW_5_100_138 is not set
+# CONFIG_B43_OPENFIRMWARE is not set
+CONFIG_B43_FW_SQUASH=y
+CONFIG_B43_FW_SQUASH_COREREVS="5,6,7,8,9,10,11,13,14,15,16"
+CONFIG_B43_FW_SQUASH_PHYTYPES="G,LP,N"
+# CONFIG_PACKAGE_B43_DEBUG is not set
+# CONFIG_PACKAGE_B43_PIO is not set
+CONFIG_PACKAGE_B43_PHY_N=y
+# CONFIG_PACKAGE_B43_PHY_HT is not set
 # CONFIG_PACKAGE_kmod-b43legacy is not set
-# CONFIG_PACKAGE_kmod-carl9170 is not set
+CONFIG_PACKAGE_kmod-carl9170=y
 CONFIG_PACKAGE_kmod-cfg80211=y
 # CONFIG_PACKAGE_kmod-hostap is not set
 # CONFIG_PACKAGE_kmod-hostap-pci is not set
@@ -1932,20 +1957,26 @@ CONFIG_MADWIFI_RCA_MINSTREL=y
 # CONFIG_PACKAGE_kmod-p54-common is not set
 # CONFIG_PACKAGE_kmod-p54-pci is not set
 # CONFIG_PACKAGE_kmod-p54-usb is not set
-# CONFIG_PACKAGE_kmod-rt2400-pci is not set
-# CONFIG_PACKAGE_kmod-rt2500-pci is not set
-# CONFIG_PACKAGE_kmod-rt2500-usb is not set
-# CONFIG_PACKAGE_kmod-rt2800-lib is not set
-# CONFIG_PACKAGE_kmod-rt2800-pci is not set
-# CONFIG_PACKAGE_kmod-rt2800-usb is not set
-# CONFIG_PACKAGE_kmod-rt2x00-lib is not set
-# CONFIG_PACKAGE_kmod-rt2x00-pci is not set
-# CONFIG_PACKAGE_kmod-rt2x00-usb is not set
-# CONFIG_PACKAGE_kmod-rt61-pci is not set
-# CONFIG_PACKAGE_kmod-rt73-usb is not set
-# CONFIG_PACKAGE_kmod-rtl8180 is not set
-# CONFIG_PACKAGE_kmod-rtl8187 is not set
-# CONFIG_PACKAGE_kmod-zd1211rw is not set
+CONFIG_PACKAGE_kmod-rt2400-pci=y
+CONFIG_PACKAGE_kmod-rt2500-pci=y
+CONFIG_PACKAGE_kmod-rt2500-usb=y
+CONFIG_PACKAGE_kmod-rt2800-lib=y
+CONFIG_PACKAGE_kmod-rt2800-pci=y
+CONFIG_PACKAGE_kmod-rt2800-usb=y
+CONFIG_PACKAGE_kmod-rt2x00-lib=y
+
+#
+# Configuration
+#
+# CONFIG_PACKAGE_RT2X00_LIB_DEBUGFS is not set
+# CONFIG_PACKAGE_RT2X00_DEBUG is not set
+CONFIG_PACKAGE_kmod-rt2x00-pci=y
+CONFIG_PACKAGE_kmod-rt2x00-usb=y
+CONFIG_PACKAGE_kmod-rt61-pci=y
+CONFIG_PACKAGE_kmod-rt73-usb=y
+CONFIG_PACKAGE_kmod-rtl8180=y
+CONFIG_PACKAGE_kmod-rtl8187=y
+CONFIG_PACKAGE_kmod-zd1211rw=y
 
 #
 # Boot Loaders
@@ -3408,7 +3439,7 @@ CONFIG_PACKAGE_zlib=y
 # CONFIG_PACKAGE_input-utils is not set
 # CONFIG_PACKAGE_io is not set
 # CONFIG_PACKAGE_ipmitool is not set
-# CONFIG_PACKAGE_iwinfo is not set
+CONFIG_PACKAGE_iwinfo=y
 # CONFIG_PACKAGE_jpeg-tools is not set
 # CONFIG_PACKAGE_jshn is not set
 # CONFIG_PACKAGE_kexec-tools is not set
