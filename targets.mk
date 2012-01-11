@@ -16,9 +16,10 @@ endif
 
 ifeq ($(T),rs)
   NAME:=RouterStation
+  TARGET:=rspro
   ARCH:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),alix)

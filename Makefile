@@ -42,30 +42,32 @@ CONFIG = $(BUILD_DIR)/$(T)/.config
 KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
+$(eval $(if $(TARGET),,TARGET=$(T)))
+
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
 
 define build_src
-	make -C $(BUILD_DIR)/$(T) $(MAKE_SRC) BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2) REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1)
+	make -C $(BUILD_DIR)/$(TARGET) $(MAKE_SRC) BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2) REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1)
 endef
 
 define checkout_src
-	svn --quiet co -r $(OWRT_SVN_REV) $(OWRT_SVN) $(BUILD_DIR)/$(T)
+	svn --quiet co -r $(OWRT_SVN_REV) $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
 	@if [ ! -d dl ]; then mkdir dl; fi 
-	ln -s ../../dl $(BUILD_DIR)/$(T)/dl
-	ln -s ../qmp/files $(BUILD_DIR)/$(T)/files
-	rm -rf $(BUILD_DIR)/$(T)/feeds/
-	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(T)/
-	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(T)/feeds.conf
+	ln -s ../../dl $(BUILD_DIR)/$(TARGET)/dl
+	ln -s ../qmp/files $(BUILD_DIR)/$(TARGET)/files
+	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
+	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(TARGET)/
+	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
 endef
 
 define copy_config
-	cp -f $(CONFIG_DIR)/$(T)/config $(CONFIG)
-	cd $(BUILD_DIR)/$(T) && ./scripts/diffconfig.sh > .config.tmp
-	cp -f $(BUILD_DIR)/$(T)/.config.tmp $(BUILD_DIR)/$(T)/.config
-	cd $(BUILD_DIR)/$(T) && make defconfig 
-	[ -f $(CONFIG_DIR)/$(T)/kernel_config ] && cat $(CONFIG_DIR)/$(T)/kernel_config >> $(CONFIG) || true
+	cp -f $(CONFIG_DIR)/$(TARGET)/config $(CONFIG)
+	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp
+	cp -f $(BUILD_DIR)/$(TARGET)/.config.tmp $(BUILD_DIR)/$(TARGET)/.config
+	cd $(BUILD_DIR)/$(TARGET) && make defconfig 
+	[ -f $(CONFIG_DIR)/$(TARGET)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET)/kernel_config >> $(CONFIG) || true
 endef
 
 define update_feeds
@@ -75,23 +77,23 @@ define update_feeds
 endef
 
 define menuconfig_owrt
-	make -C $(BUILD_DIR)/$(T) menuconfig
-	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
-	cp -f $(CONFIG) $(MY_CONFIGS)/$(T)/config
+	make -C $(BUILD_DIR)/$(TARGET) menuconfig
+	[ ! -d $(MY_CONFIGS)/$(TARGET) ] && mkdir -p $(MY_CONFIGS)/$(TARGET) || true
+	cp -f $(CONFIG) $(MY_CONFIGS)/$(TARGET)/config
 endef
 
 define kmenuconfig_owrt
-	make -C $(BUILD_DIR)/$(T) kernel_menuconfig
-	[ ! -d $(MY_CONFIGS)/$(T) ] && mkdir -p $(MY_CONFIGS)/$(T) || true
-	cp -f $(KCONFIG) $(MY_CONFIGS)/$(T)/kernel_config
+	make -C $(BUILD_DIR)/$(TARGET) kernel_menuconfig
+	[ ! -d $(MY_CONFIGS)/$(TARGET) ] && mkdir -p $(MY_CONFIGS)/$(TARGET) || true
+	cp -f $(KCONFIG) $(MY_CONFIGS)/$(TARGET)/kernel_config
 endef
 
 define post_build
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(T)/$(IMAGE) -c > $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(T)/$(SYSUPGRADE) -c > $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE) -c > $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SYSUPGRADE) -c > $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
 	@[ -f $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin ] || false
 	@[ -f $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin ] || false
 	@echo 
@@ -105,8 +107,8 @@ define clean_all
 endef
 
 define clean_target
-	[ -d "$(BUILD_DIR)/$(T)" ] && rm -rf $(BUILD_DIR)/$(T) || true
-	rm -f .checkout_$(T) 2>/dev/null || true
+	[ -d "$(BUILD_DIR)/$(TARGET)" ] && rm -rf $(BUILD_DIR)/$(TARGET) || true
+	rm -f .checkout_$(TARGET) 2>/dev/null || true
 endef
 
 define clean_pkg
@@ -136,14 +138,14 @@ endef
 	@touch $@
 
 checkout: .checkout_owrt_pkg .checkout_qmp .checkout_b6m 
-	$(if $(T),,$(call target_error))
-	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
-	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
-	$(if $(wildcard .checkout_$(T)),,$(call copy_config))
-	@touch .checkout_$(T)
+	$(if $(TARGET),,$(call target_error))
+	$(if $(wildcard .checkout_$(TARGET)),,$(call checkout_src))
+	$(if $(wildcard .checkout_$(TARGET)),,$(call update_feeds,$(TARGET)))
+	$(if $(wildcard .checkout_$(TARGET)),,$(call copy_config))
+	@touch .checkout_$(TARGET)
 
 sync_config:
-	$(if $(T),,$(call target_error))
+	$(if $(TARGET),,$(call target_error))
 	$(call copy_config)
 	
 update: .checkout_owrt_pkg .checkout_qmp .checkout_b6m
@@ -151,7 +153,7 @@ update: .checkout_owrt_pkg .checkout_qmp .checkout_b6m
 	cd $(BUILD_DIR)/b6m && git pull
 
 update_all: update
-	$(if $(T),HW_AVAILABLE=$(T)) 
+	$(if $(TARGET),HW_AVAILABLE=$(TARGET)) 
 	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
 menuconfig: checkout
@@ -161,10 +163,10 @@ kernel_menuconfig: checkout
 	$(call kmenuconfig_owrt)
 
 clean:
-	$(if $(T),$(call clean_target),$(call clean_all))
+	$(if $(TARGET),$(call clean_target),$(call clean_all))
 
 clean_qmp:
-	cd $(BUILD_DIR)/$(T) ; \
+	cd $(BUILD_DIR)/$(TARGET) ; \
 	for d in $(QMP_FEED)/*; do make $$d/clean ; done
 
 list_targets:
@@ -179,7 +181,7 @@ help:
 	cat README | more || true
 
 build: checkout
-	$(if $(T),$(call build_src))
+	$(if $(TARGET),$(call build_src))
 	$(call post_build)
 
 all: build
