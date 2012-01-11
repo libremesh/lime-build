@@ -1,12 +1,16 @@
-[qmpfw]
+=================================================================================
+				qMpfw SDK
+=================================================================================
 
-Qmpfw is a tool for developers to create a development enviroment for qMp.
+qMpfw is a tool for developers to create a development enviroment for qMp.
 Basically it consists in one Makefile, so it is called using "make" command.
 
 Read Only URL: http://qmp.cat/git/qmpfw.git
 Developer URL: ssh://gitosis@qmp.cat:221/qmpfw.git
 
-*Directory structure
+=================================================================================
+			Directory structure
+=================================================================================
 
 There are several directories and files. This is the functionallity for each of them:
 
@@ -24,10 +28,14 @@ There are several directories and files. This is the functionallity for each of 
 
     images: output directory for compiled images, each of them has a different timestamp, so you can have as many as you want
 
-*Command options
+
+=================================================================================
+				Command options
+=================================================================================
 
 To compile a qMp image from scratch, you need to specify the target (next example with target=rspro):
-This command will run all necessary commands to compile the image. After the compilation you can see the OpenWRT code in directory: build/[target]
+This command will run all necessary commands to compile the image. After the compilation you can see the 
+OpenWRT code in directory: build/[target]
 
     make T=rspro build
 
@@ -35,53 +43,73 @@ Also you can specify the number of parallel processes for compilation and the ve
 
     make V=99 J=2 T=rspro build
 
+For work in developer mode (uses QMP readwrite repository instead readonly one)
+
+    make T=rspro DEV=1 build
+
+---------------------------------------------------------------------------------
 To see list of avaiable targets run:
 
     make list_targets
 
+---------------------------------------------------------------------------------
 This will update all targets
 
     make update
-    (this will update only qmp source)
 
+Note that this will update only qmp and b6m source (not openwrt)
+
+---------------------------------------------------------------------------------
 This will update only rspro target
 
     make T=rspro update
 
+---------------------------------------------------------------------------------
 This will update all sources (qmp, openwrt feeds and eighennet)
 
     make update_all
 
+---------------------------------------------------------------------------------
+To syncronize config files from configs/ dir to existing target
+
+    make T=rspro sync_config
+
+---------------------------------------------------------------------------------
 To run menuconfig (from openwrt):
 
     make T=rspro menuconfig
 
 After that, the new config file will be applied to destination target and also it will by copied inside build/configs directory
-To run kernel menuconfig (from openwrt):
+
+---------------------------------------------------------------------------------
+To run kernel menuconfig (from openwrt), in this case config file will be not copied because it is not directly compatible with configs/target/kernel_config:
 
     make T=rspro kernel_menuconfig
 
+---------------------------------------------------------------------------------
 To run the initial checkout:
 
     make T=rspro checkout
 
+---------------------------------------------------------------------------------
 To clean specific target:
 
     make T=rspro clean
 
+---------------------------------------------------------------------------------
 To clean all targets:
 
     make clean
 
+---------------------------------------------------------------------------------
 To clean just qmp packages from a target
 
     make T=rspro clean_qmp
 
+---------------------------------------------------------------------------------
 To configure some general parameters from qMp you can run:
 
     make config
 
 TODO: This feature is missing
-
-
 

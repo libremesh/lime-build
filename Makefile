@@ -19,7 +19,8 @@
 OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
 OWRT_SVN_REV = 29704
 OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
-QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
+QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
+QMP_GIT_RO = git://qmp.cat/qmp.git
 QMP_GIT_BRANCH = master
 B6M_GIT = git://qmp.cat/b6m.git
 B6M_GIT_BRANCH = openwrt
@@ -40,6 +41,7 @@ TIMESTAMP = $(shell date +%d%m%y_%H%M)
 CONFIG = $(BUILD_DIR)/$(T)/.config
 KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
+$(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
@@ -119,6 +121,7 @@ define target_error
 endef
 
 .checkout_qmp:
+	@[ "$(DEV)" == "1" ] && echo "Using developer enviroment" || true
 	git clone $(QMP_GIT) $(BUILD_DIR)/qmp
 	cd $(BUILD_DIR)/qmp; git checkout $(QMP_GIT_BRANCH); cd ..
 	@touch $@
@@ -171,6 +174,9 @@ list_targets:
 config:
 	select HW in alix rs rspro x86 fonera nsm5 nsm2; do break; done; echo $HW > .config.tmp;
 	mv .config.tmp .config 
+
+help:
+	cat README | more || true
 
 build: checkout
 	$(if $(T),$(call build_src))
