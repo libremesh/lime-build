@@ -10,8 +10,8 @@ HW_AVAILABLE := alix rs rspro x86 fonera nsm5 nsm2
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
   ARCH:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rspro-squashfs-factory.bin 
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rspro-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),rs)
@@ -24,8 +24,9 @@ endif
 ifeq ($(T),alix)
   NAME:=Alix
   ARCH:=x86
-  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
+  COMPRESSED:=1
+  IMAGE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img.gz
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img.gz
 endif
 
 ifeq ($(T),nsm5)

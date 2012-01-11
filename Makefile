@@ -16,13 +16,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
-OWRT_SVN_REV = 27617
+OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
+OWRT_SVN_REV = 29704
 OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
 QMP_GIT = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_BRANCH = master
-EIGENNET_GIT = git://gitorious.org/eigennet/packages.git
-EIGENNET_GIT_REV = 7467D68855991FE35797B0A5958B000F65C0134F
 B6M_GIT = git://qmp.cat/b6m.git
 B6M_GIT_BRANCH = openwrt
 BUILD_DIR = build
@@ -62,7 +60,10 @@ endef
 
 define copy_config
 	cp -f $(CONFIG_DIR)/$(T)/config $(CONFIG)
-	[ -f $(CONFIG_DIR)/$(T)/kernel_config ] && cp -f $(CONFIG_DIR)/$(T)/kernel_config $(KCONFIG) || true
+	cd $(BUILD_DIR)/$(T) && ./scripts/diffconfig.sh > .config.tmp
+	cp -f $(BUILD_DIR)/$(T)/.config.tmp $(BUILD_DIR)/$(T)/.config
+	cd $(BUILD_DIR)/$(T) && make defconfig 
+	[ -f $(CONFIG_DIR)/$(T)/kernel_config ] && cat $(CONFIG_DIR)/$(T)/kernel_config >> $(CONFIG) || true
 endef
 
 define update_feeds
@@ -85,8 +86,12 @@ endef
 
 define post_build
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin
-	cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin
+	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(T)/$(IMAGE) -c > $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(T)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(T)/$(SYSUPGRADE) -c > $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
+	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(T)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
+	@[ -f $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin ] || false
+	@[ -f $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin ] || false
 	@echo 
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
 endef
@@ -118,11 +123,6 @@ endef
 	cd $(BUILD_DIR)/qmp; git checkout $(QMP_GIT_BRANCH); cd ..
 	@touch $@
 
-.checkout_eig:
-	git clone $(EIGENNET_GIT) $(BUILD_DIR)/eigennet/packages
-	cd $(BUILD_DIR)/eigennet/packages && git reset --hard $(EIGENNET_GIT_REV)
-	@touch $@
-
 .checkout_b6m:
 	git clone $(B6M_GIT) $(BUILD_DIR)/b6m
 	cd $(BUILD_DIR)/b6m; git checkout --track origin/$(B6M_GIT_BRANCH); cd ..
@@ -132,16 +132,20 @@ endef
 	svn --quiet co -r ${OWRT_SVN_REV} ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
 	@touch $@
 
-checkout: .checkout_owrt_pkg .checkout_qmp .checkout_eig .checkout_b6m 
+checkout: .checkout_owrt_pkg .checkout_qmp .checkout_b6m 
 	$(if $(T),,$(call target_error))
 	$(if $(wildcard .checkout_$(T)),,$(call checkout_src))
 	$(if $(wildcard .checkout_$(T)),,$(call update_feeds,$(T)))
 	$(if $(wildcard .checkout_$(T)),,$(call copy_config))
 	@touch .checkout_$(T)
+
+sync_config:
+	$(if $(T),,$(call target_error))
+	$(call copy_config)
 	
-update: .checkout_owrt_pkg .checkout_eig .checkout_qmp .checkout_b6m
+update: .checkout_owrt_pkg .checkout_qmp .checkout_b6m
 	cd $(BUILD_DIR)/qmp && git pull
-#	cd $(BUILD_DIR)/eigennet/packages && git pull
+	cd $(BUILD_DIR)/b6m && git pull
 
 update_all: update
 	$(if $(T),HW_AVAILABLE=$(T)) 
