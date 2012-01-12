@@ -41,9 +41,17 @@ TIMESTAMP = $(shell date +%d%m%y_%H%M)
 CONFIG = $(BUILD_DIR)/$(T)/.config
 KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
+#Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
 $(eval $(if $(TARGET),,TARGET=$(T)))
 
+#Getting output image names
+IMAGE_PATH = $(shell echo $(IMAGE) | cut -d' ' -f1 )
+SIMAGE_PATH = $(shell echo $(SYSUPGRADE) | cut -d' ' -f1 )
+IM_NAME = $(shell echo $(IMAGE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(TIMESTAMP)/g )
+$(eval $(if $(IM_NAME),,IM_NAME=$(NAME)-factory-$(TIMESTAMP).bin))
+SIM_NAME = $(shell echo $(SYSUPGRADE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(TIMESTAMP)/g )
+$(eval $(if $(SIM_NAME),,SIM_NAME=$(NAME)-sysupgrade-$(TIMESTAMP).bin))
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
@@ -89,15 +97,16 @@ define kmenuconfig_owrt
 endef
 
 define post_build
+	$(eval COMP=$(shell ls $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
-	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE) -c > $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE) $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" == "1" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SYSUPGRADE) -c > $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
-	@[ "$(COMPRESSED)" != "1" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SYSUPGRADE) $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin || true
-	@[ -f $(IMAGES)/$(NAME)-factory-$(TIMESTAMP).bin ] || false
-	@[ -f $(IMAGES)/$(NAME)-upgrade-$(TIMESTAMP).bin ] || false
-	@echo 
-	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory"
+	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -eq 1 -a ! -z "$(SYSUPGRADE)" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
+	@[ $(COMP) -ne 1 -a ! -z "$(SYSUPGRADE)" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
+	@[ -f $(IMAGES)/$(IM_NAME) ] || false
+	@echo $(IM_NAME)
+	@echo $(SIM_NAME)
+	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
 define clean_all
@@ -168,6 +177,9 @@ clean:
 clean_qmp:
 	cd $(BUILD_DIR)/$(TARGET) ; \
 	for d in $(QMP_FEED)/*; do make $$d/clean ; done
+
+post_build:
+	$(call post_build)
 
 list_targets:
 	$(info $(HW_AVAILABLE))

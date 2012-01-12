@@ -25,14 +25,20 @@ endif
 ifeq ($(T),alix)
   NAME:=Alix
   ARCH:=x86
-  COMPRESSED:=1
   IMAGE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img.gz
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img.gz
 endif
 
 ifeq ($(T),nsm5)
   NAME:=NanoStationM5
   ARCH:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
+
+ifeq ($(T),fonera)
+  NAME:=Fonera
+  ARCH:=atheros
+  IMAGE:=bin/$(ARCH)/openwrt-atheros-root.squashfs $(NAME)-TIMESTAMP-root.squashfs
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
+endif
+
