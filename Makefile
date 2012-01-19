@@ -17,7 +17,7 @@
 #
 
 OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
-OWRT_SVN_REV = 29704
+OWRT_SVN_REV = 29797
 OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
@@ -38,8 +38,6 @@ MAKE_SRC = -j$(J) V=$(V)
 include targets.mk
 
 TIMESTAMP = $(shell date +%d%m%y_%H%M)
-CONFIG = $(BUILD_DIR)/$(T)/.config
-KCONFIG = $(BUILD_DIR)/$(T)/target/linux/$(ARCH)/config-* 
 
 #Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
@@ -52,6 +50,9 @@ IM_NAME = $(shell echo $(IMAGE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(T
 $(eval $(if $(IM_NAME),,IM_NAME=$(NAME)-factory-$(TIMESTAMP).bin))
 SIM_NAME = $(shell echo $(SYSUPGRADE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(TIMESTAMP)/g )
 $(eval $(if $(SIM_NAME),,SIM_NAME=$(NAME)-sysupgrade-$(TIMESTAMP).bin))
+
+CONFIG = $(BUILD_DIR)/$(TARGET)/.config
+KCONFIG = $(BUILD_DIR)/$(TARGET)/target/linux/$(ARCH)/config-* 
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
