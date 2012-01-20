@@ -16,8 +16,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
-OWRT_SVN_REV = 29797
+#OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
+#OWRT_SVN_REV = 29592
+OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
 OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
@@ -62,7 +63,7 @@ define build_src
 endef
 
 define checkout_src
-	svn --quiet co -r $(OWRT_SVN_REV) $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
+	svn --quiet co $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
 	@if [ ! -d dl ]; then mkdir dl; fi 
 	ln -s ../../dl $(BUILD_DIR)/$(TARGET)/dl
 	ln -s ../qmp/files $(BUILD_DIR)/$(TARGET)/files
@@ -144,7 +145,7 @@ endef
 	@touch $@	
 
 .checkout_owrt_pkg:
-	svn --quiet co -r ${OWRT_SVN_REV} ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
+	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
 	@touch $@
 
 checkout: .checkout_owrt_pkg .checkout_qmp .checkout_b6m 
