@@ -19,7 +19,7 @@
 #OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
 #OWRT_SVN_REV = 29592
 OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
-OWRT_PKG_SVN = svn://svn.openwrt.org/openwrt/packages
+OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_10.03.1
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
 QMP_GIT_BRANCH = master
