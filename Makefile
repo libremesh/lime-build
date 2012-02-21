@@ -22,7 +22,7 @@ OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
 OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_10.03.1
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
-QMP_GIT_BRANCH = master
+QMP_GIT_BRANCH ?= master
 B6M_GIT = git://qmp.cat/b6m.git
 B6M_GIT_BRANCH = openwrt
 BUILD_DIR = build
@@ -65,11 +65,16 @@ endef
 define checkout_src
 	svn --quiet co $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
 	@if [ ! -d dl ]; then mkdir dl; fi 
-	ln -s ../../dl $(BUILD_DIR)/$(TARGET)/dl
-	ln -s ../qmp/files $(BUILD_DIR)/$(TARGET)/files
+	ln -fs ../../dl $(BUILD_DIR)/$(TARGET)/dl
+	ln -fs ../qmp/files $(BUILD_DIR)/$(TARGET)/files
 	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
 	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(TARGET)/
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
+endef
+
+define checkout_owrt_pkg_override
+	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages.$(TARGET)
+	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_DIR)/$(TARGET)/feeds.conf	
 endef
 
 define copy_config
@@ -120,6 +125,8 @@ endef
 define clean_target
 	[ -d "$(BUILD_DIR)/$(TARGET)" ] && rm -rf $(BUILD_DIR)/$(TARGET) || true
 	rm -f .checkout_$(TARGET) 2>/dev/null || true
+	[ -d "$(BUILD_DIR)/packages.$(TARGET)" ] && rm -rf $(BUILD_DIR)/packages.$(TARGET) || true
+	rm -f .checkout_owrt_pkg_override_$(TARGET) || true
 endef
 
 define clean_pkg
@@ -148,9 +155,15 @@ endef
 	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
 	@touch $@
 
-checkout: .checkout_owrt_pkg .checkout_qmp .checkout_b6m 
+.checkout_owrt_pkg_override:
+	$(if $(filter $(origin OWRT_PKG_SVN),override),$(if $(wildcard .checkout_owrt_pkg_override_$(TARGET)),,$(call checkout_owrt_pkg_override)),)
+	@touch .checkout_owrt_pkg_override_$(TARGET)
+
+.checkout_owrt:
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call checkout_src))
+
+checkout: .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b6m
 	$(if $(wildcard .checkout_$(TARGET)),,$(call update_feeds,$(TARGET)))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call copy_config))
 	@touch .checkout_$(TARGET)
@@ -159,7 +172,7 @@ sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(call copy_config)
 	
-update: .checkout_owrt_pkg .checkout_qmp .checkout_b6m
+update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b6m
 	cd $(BUILD_DIR)/qmp && git pull
 	cd $(BUILD_DIR)/b6m && git pull
 
@@ -192,7 +205,8 @@ config:
 	mv .config.tmp .config 
 
 help:
-	cat README | more || true
+	echo $(origin OWRT_PKG_SVN)
+	#cat README | more || true
 
 build: checkout
 	$(if $(TARGET),$(call build_src))

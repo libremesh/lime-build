@@ -16,7 +16,7 @@ endif
 
 ifeq ($(T),rs)
   NAME:=RouterStation
-  TARGET:=rspro
+  override TARGET:=rspro
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-sysupgrade.bin
@@ -35,10 +35,28 @@ ifeq ($(T),nsm5)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),freestation)
+  NAME:=Freestation
+  ARCH:=ramips
+  IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-fonera20n-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-fonera20n-squashfs-sysupgrade.bin
+  override OWRT_SVN = -r 30604 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 30604 svn://svn.openwrt.org/openwrt/packages
+endif
+
+
+ifeq ($(T),wispstation)
+  NAME:=WispStation
+  ARCH:=atheros
+  IMAGE:=bin/$(ARCH)/openwrt-atheros-root.squashfs $(NAME)-TIMESTAMP-root.squashfs
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
+endif
+
 ifeq ($(T),fonera)
   NAME:=Fonera
   ARCH:=atheros
   IMAGE:=bin/$(ARCH)/openwrt-atheros-root.squashfs $(NAME)-TIMESTAMP-root.squashfs
   SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
 endif
+
 
