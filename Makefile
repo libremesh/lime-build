@@ -163,7 +163,7 @@ endef
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call checkout_src))
 
-checkout: .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b6m
+checkout: .checkout_qmp .checkout_b6m .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
 	$(if $(wildcard .checkout_$(TARGET)),,$(call update_feeds,$(TARGET)))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call copy_config))
 	@touch .checkout_$(TARGET)
