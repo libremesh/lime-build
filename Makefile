@@ -95,13 +95,13 @@ endef
 
 define menuconfig_owrt
 	make -C $(BUILD_DIR)/$(TARGET) menuconfig
-	[ ! -d $(MY_CONFIGS)/$(TARGET) ] && mkdir -p $(MY_CONFIGS)/$(TARGET) || true
+	mkdir -p $(MY_CONFIGS)/$(TARGET)
 	cp -f $(CONFIG) $(MY_CONFIGS)/$(TARGET)/config
 endef
 
 define kmenuconfig_owrt
 	make -C $(BUILD_DIR)/$(TARGET) kernel_menuconfig
-	[ ! -d $(MY_CONFIGS)/$(TARGET) ] && mkdir -p $(MY_CONFIGS)/$(TARGET) || true
+	mkdir -p $(MY_CONFIGS)/$(TARGET)
 	cp -f $(KCONFIG) $(MY_CONFIGS)/$(TARGET)/kernel_config
 endef
 
@@ -119,16 +119,16 @@ define post_build
 endef
 
 define clean_all
-	[ -d "$(BUILD_DIR)" ] && rm -rf $(BUILD_DIR)/* || true
-	rm -f .checkout_* 2>/dev/null || true
-	[ -d "$(BUILD_DIR)" ] && rm -f $(IMAGES)/* || true
+	rm -rf $(BUILD_DIR)/*
+	rm -f .checkout_*
+	rm -f $(IMAGES)/*
 endef
 
 define clean_target
-	[ -d "$(BUILD_DIR)/$(TARGET)" ] && rm -rf $(BUILD_DIR)/$(TARGET) || true
-	rm -f .checkout_$(TARGET) 2>/dev/null || true
-	[ -d "$(BUILD_DIR)/packages.$(TARGET)" ] && rm -rf $(BUILD_DIR)/packages.$(TARGET) || true
-	rm -f .checkout_owrt_pkg_override_$(TARGET) || true
+	rm -rf $(BUILD_DIR)/$(TARGET)
+	rm -f .checkout_$(TARGET)
+	rm -rf $(BUILD_DIR)/packages.$(TARGET)
+	rm -f .checkout_owrt_pkg_override_$(TARGET)
 endef
 
 define clean_pkg
