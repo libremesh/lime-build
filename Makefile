@@ -78,8 +78,8 @@ define checkout_owrt_pkg_override
 endef
 
 define copy_config
-	cp -f $(CONFIG_DIR)/$(TARGET)/config $(CONFIG)
-	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp
+	cp -f $(CONFIG_DIR)/$(TARGET)/config $(CONFIG) || echo "WARNING: Config file not found!"
+	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp 
 	cp -f $(BUILD_DIR)/$(TARGET)/.config.tmp $(BUILD_DIR)/$(TARGET)/.config
 	cd $(BUILD_DIR)/$(TARGET) && make defconfig 
 	[ -f $(CONFIG_DIR)/$(TARGET)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET)/kernel_config >> $(CONFIG) || true
