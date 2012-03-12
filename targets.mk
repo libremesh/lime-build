@@ -40,16 +40,17 @@ ifeq ($(T),freestation)
   ARCH:=ramips
   IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-fonera20n-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-fonera20n-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 30604 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 30604 svn://svn.openwrt.org/openwrt/packages
+  override OWRT_SVN = -r 30470 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 30470 svn://svn.openwrt.org/openwrt/packages
 endif
 
-
-ifeq ($(T),wispstation)
-  NAME:=WispStation
-  ARCH:=atheros
-  IMAGE:=bin/$(ARCH)/openwrt-atheros-root.squashfs $(NAME)-TIMESTAMP-root.squashfs
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
+ifeq ($(T),tplink2543)
+  NAME:=Tplink-2543
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-sysupgrade.bin
+  override OWRT_SVN = -r 29800 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 29800 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),fonera)
