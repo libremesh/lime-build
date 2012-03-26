@@ -112,7 +112,7 @@ define post_build
 	@[ $(COMP) -ne 1 -a ! -z "$(SYSUPGRADE)" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
 	@[ -f $(IMAGES)/$(IM_NAME) ] || false
 	@echo $(IM_NAME)
-	@echo $(SIM_NAME)
+	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
