@@ -15,6 +15,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+#    Contributors: Simó Albert i Beltran
+#
 
 #OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
 #OWRT_SVN_REV = 29592
