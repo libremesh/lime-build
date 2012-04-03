@@ -1,7 +1,7 @@
 # [qMp] firmware generator (http://qmp.cat)
 #
 #    Copyright (C) 2011 qmp.cat
-#    
+#
 #    Thiss program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -53,7 +53,7 @@ SIM_NAME = $(shell echo $(SYSUPGRADE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTA
 $(eval $(if $(SIM_NAME),,SIM_NAME=$(NAME)-sysupgrade-$(TIMESTAMP).bin))
 
 CONFIG = $(BUILD_DIR)/$(TARGET)/.config
-KCONFIG = $(BUILD_DIR)/$(TARGET)/target/linux/$(ARCH)/config-* 
+KCONFIG = $(BUILD_DIR)/$(TARGET)/target/linux/$(ARCH)/config-*
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
 
@@ -64,7 +64,7 @@ endef
 
 define checkout_src
 	svn --quiet co $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
-	@if [ ! -d dl ]; then mkdir dl; fi 
+	@if [ ! -d dl ]; then mkdir dl; fi
 	ln -fs ../../dl $(BUILD_DIR)/$(TARGET)/dl
 	ln -fs ../qmp/files $(BUILD_DIR)/$(TARGET)/files
 	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
@@ -74,14 +74,14 @@ endef
 
 define checkout_owrt_pkg_override
 	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages.$(TARGET)
-	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_DIR)/$(TARGET)/feeds.conf	
+	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
 endef
 
 define copy_config
 	cp -f $(CONFIG_DIR)/$(TARGET)/config $(CONFIG) || echo "WARNING: Config file not found!"
-	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp 
+	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp
 	cp -f $(BUILD_DIR)/$(TARGET)/.config.tmp $(BUILD_DIR)/$(TARGET)/.config
-	cd $(BUILD_DIR)/$(TARGET) && make defconfig 
+	cd $(BUILD_DIR)/$(TARGET) && make defconfig
 	[ -f $(CONFIG_DIR)/$(TARGET)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET)/kernel_config >> $(CONFIG) || true
 endef
 
@@ -131,7 +131,7 @@ endef
 
 define clean_pkg
 	echo "Cleaning package $1"
-	make $1/clean 	
+	make $1/clean
 endef
 
 define target_error
@@ -149,7 +149,7 @@ endef
 .checkout_b6m:
 	git clone $(B6M_GIT) $(BUILD_DIR)/b6m
 	cd $(BUILD_DIR)/b6m; git checkout --track origin/$(B6M_GIT_BRANCH); cd ..
-	@touch $@	
+	@touch $@
 
 .checkout_owrt_pkg:
 	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
@@ -171,18 +171,18 @@ checkout: .checkout_qmp .checkout_b6m .checkout_owrt .checkout_owrt_pkg .checkou
 sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(call copy_config)
-	
+
 update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b6m
 	cd $(BUILD_DIR)/qmp && git pull
 	cd $(BUILD_DIR)/b6m && git pull
 
 update_all: update
-	$(if $(TARGET),HW_AVAILABLE=$(TARGET)) 
+	$(if $(TARGET),HW_AVAILABLE=$(TARGET))
 	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
 menuconfig: checkout
 	$(call menuconfig_owrt)
-	
+
 kernel_menuconfig: checkout
 	$(call kmenuconfig_owrt)
 
@@ -202,7 +202,7 @@ list_targets:
 
 config:
 	select HW in alix rs rspro x86 fonera nsm5 nsm2; do break; done; echo $HW > .config.tmp;
-	mv .config.tmp .config 
+	mv .config.tmp .config
 
 help:
 	echo $(origin OWRT_PKG_SVN)
