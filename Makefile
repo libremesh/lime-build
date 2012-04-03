@@ -110,8 +110,8 @@ define post_build
 	mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -eq 1 -a ! -z "$(SYSUPGRADE)" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
-	@[ $(COMP) -ne 1 -a ! -z "$(SYSUPGRADE)" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
+	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
+	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
 	@[ -f $(IMAGES)/$(IM_NAME) ] || false
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
