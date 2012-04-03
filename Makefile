@@ -66,7 +66,7 @@ endef
 
 define checkout_src
 	svn --quiet co $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
-	@if [ ! -d dl ]; then mkdir dl; fi
+	mkdir -p dl
 	ln -fs ../../dl $(BUILD_DIR)/$(TARGET)/dl
 	ln -fs ../qmp/files $(BUILD_DIR)/$(TARGET)/files
 	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
@@ -107,7 +107,7 @@ endef
 
 define post_build
 	$(eval COMP=$(shell ls $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
-	[ ! -d $(IMAGES) ] && mkdir $(IMAGES) || true
+	mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -eq 1 -a ! -z "$(SYSUPGRADE)" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
