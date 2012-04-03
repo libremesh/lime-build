@@ -1,6 +1,6 @@
 # [qMp] firmware generator (http://qmp.cat)
 #
-#    Copyright (C) 2011 qmp.cat
+#    Copyright (C) 2011-2012 qmp.cat
 #
 #    Thiss program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
