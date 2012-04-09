@@ -35,6 +35,14 @@ ifeq ($(T),nsm5)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),nsm2)
+  NAME:=NanoStationM2
+  override TARGET:=nsm5
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
+endif
+
 ifeq ($(T),freestation)
   NAME:=Freestation
   ARCH:=ramips
@@ -60,6 +68,13 @@ ifeq ($(T),wpe72)
   override OWRT_SVN = -r 31201 svn://svn.openwrt.org/openwrt/trunk
   override OWRT_PKG_SVN = -r 31201 svn://svn.openwrt.org/openwrt/packages
 endif
+
+ifeq ($(T),wispstation)
+  NAME:=WispStation
+  ARCH:=atheros
+  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt5-squashfs.bin
+endif
+
 
 ifeq ($(T),fonera)
   NAME:=Fonera
