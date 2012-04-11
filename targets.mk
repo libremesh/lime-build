@@ -26,6 +26,7 @@ ifeq ($(T),alix)
   NAME:=Alix
   ARCH:=x86
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
 endif
 
 ifeq ($(T),nsm5)
