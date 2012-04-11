@@ -40,7 +40,7 @@ MAKE_SRC = -j$(J) V=$(V)
 
 include targets.mk
 
-TIMESTAMP = $(shell date +%d%m%y_%H%M)
+TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
