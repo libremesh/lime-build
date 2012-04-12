@@ -54,7 +54,7 @@ ifeq ($(T),freestation)
 endif
 
 ifeq ($(T),tplink2543)
-  NAME:=Tplink-2543
+  NAME:=Tplink2543
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-sysupgrade.bin
