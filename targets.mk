@@ -44,6 +44,14 @@ ifeq ($(T),nsm2)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),rocket)
+  NAME:=Rocket
+  override TARGET:=nsm5
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rocket-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rocket-m-squashfs-sysupgrade.bin
+endif
+
 ifeq ($(T),freestation)
   NAME:=Freestation
   ARCH:=ramips
