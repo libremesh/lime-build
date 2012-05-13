@@ -55,10 +55,10 @@ endif
 ifeq ($(T),freestation)
   NAME:=Freestation
   ARCH:=ramips
-  IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-fonera20n-squashfs-factory.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31201 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31201 svn://svn.openwrt.org/openwrt/packages
+  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),tplink2543)
@@ -80,11 +80,11 @@ ifeq ($(T),tplink842)
 endif
 
 ifeq ($(T),wpe72)
-  NAME:=Compex-WPE72
+  NAME:=CompexWPE72
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-wpe72-squashfs-8M-factory.img
-  override OWRT_SVN = -r 31201 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31201 svn://svn.openwrt.org/openwrt/packages
+  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),wispstation)
