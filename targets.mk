@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink842 freestation
+HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink842 freestation rocket wpe72 wispstation
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
