@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink842 freestation rocket wpe72 wispstation
+HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink841 tplink842 freestation rocket wpe72 wispstation
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
@@ -75,6 +75,15 @@ ifeq ($(T),tplink842)
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-sysupgrade.bin
+  override OWRT_SVN = -r 31348 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
+endif
+
+ifeq ($(T),tplink841)
+  NAME:=Tplink841
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-sysupgrade.bin
   override OWRT_SVN = -r 31348 svn://svn.openwrt.org/openwrt/trunk
   override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
