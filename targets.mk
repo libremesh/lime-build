@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink841 tplink842 freestation rocket wpe72 wispstation
+HW_AVAILABLE := alix rs rspro fonera nsm5 nsm2 tplink2543 tplink841 tplink842 freestation rocket bullet wpe72 wispstation
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
@@ -102,7 +102,6 @@ ifeq ($(T),wispstation)
   IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt5-squashfs.bin
 endif
 
-
 ifeq ($(T),fonera)
   NAME:=Fonera
   ARCH:=atheros
@@ -110,4 +109,11 @@ ifeq ($(T),fonera)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
 endif
 
+ifeq ($(T),bullet)
+  NAME:=Bullet
+  override TARGET:=nsm5
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-sysupgrade.bin
+endif
 
