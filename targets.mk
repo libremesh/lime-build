@@ -66,8 +66,8 @@ ifeq ($(T),tplink2543)
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31201 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31201 svn://svn.openwrt.org/openwrt/packages
+  override OWRT_SVN = -r 32353 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 32353 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),tplink842)
