@@ -207,8 +207,7 @@ config:
 	mv .config.tmp .config
 
 help:
-	echo $(origin OWRT_PKG_SVN)
-	#cat README | more || true
+	cat README | more || true
 
 build: checkout
 	$(if $(TARGET),$(call build_src))
