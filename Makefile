@@ -69,7 +69,7 @@ define checkout_src
 	mkdir -p dl
 	ln -fs ../../dl $(BUILD_DIR)/$(TARGET)/dl
 	ln -fs ../qmp/files $(BUILD_DIR)/$(TARGET)/files
-	ln -fs $(BUILD_DIR)/qmp/files files
+	ln -fs $(BUILD_DIR)/qmp/files
 	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
 	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(TARGET)/
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
