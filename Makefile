@@ -180,8 +180,7 @@ update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b
 	cd $(BUILD_DIR)/b6m && git pull
 
 update_all: update
-	$(if $(TARGET),HW_AVAILABLE=$(TARGET))
-	$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
+	$(if $(TARGET),$(call update_feeds,$(TARGET)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
 
 menuconfig: checkout
 	$(call menuconfig_owrt)
