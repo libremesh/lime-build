@@ -118,5 +118,6 @@ There are several directories and files. This is the functionallity for each of 
 
     - images: output directory for compiled images, each of them has a different timestamp, so you can have as many as you want
 
+    - files: directories and files inside will be directly copied to the root of the system image
 
 
