@@ -203,7 +203,7 @@ list_targets:
 	@exit 0
 
 config:
-	select HW in alix rs rspro x86 fonera nsm5 nsm2; do break; done; echo $HW > .config.tmp;
+	select HW in $(HW_AVAILABLE); do break; done; echo $$HW > .config.tmp;
 	mv .config.tmp .config
 
 help:
