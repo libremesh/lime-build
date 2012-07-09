@@ -88,6 +88,16 @@ ifeq ($(T),tplink841)
   override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
 
+ifeq ($(T),tplinkN750)
+  NAME:=TplinkN750
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-sysupgrade.bin
+  override OWRT_SVN = -r 32638 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 32638 svn://svn.openwrt.org/openwrt/packages
+endif
+
+
 ifeq ($(T),wpe72)
   NAME:=CompexWPE72
   ARCH:=ar71xx
