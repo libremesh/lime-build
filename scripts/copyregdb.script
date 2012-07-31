@@ -1,0 +1,6 @@
+#!/bin/sh
+[ "$1" != "PRE_BUILD" ] && exit 0
+shift
+TARGET="$1"
+[ -z "$TARGET" ] || [ ! -d "build/$TARGET" ] && exit 1
+cp -f scripts/files/regdb.txt build/$TARGET/package/mac80211/files

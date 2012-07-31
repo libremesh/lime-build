@@ -1,0 +1,8 @@
+##############################
+## SCRIPT RECIPES DIRECTORY ##
+##############################
+#
+# All files named *.script placed in this directory will be executed during compilation process.
+# First parameter will be PRE_BUILD or POST_BUILD, so script can detect which is the current step and it can be executed or not.
+# Second parameter will be the Target for the current compilation.
+#

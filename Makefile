@@ -33,6 +33,7 @@ MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
 QMP_FEED = package/feeds/qmp_packages
+SCRIPTS_DIR= scripts
 J ?= 1
 V ?= 0
 T =
@@ -106,6 +107,10 @@ define kmenuconfig_owrt
 	cp -f $(KCONFIG) $(MY_CONFIGS)/$(TARGET)/kernel_config
 endef
 
+define pre_build
+	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) PRE_BUILD $(TARGET)) )
+endef
+
 define post_build
 	$(eval COMP=$(shell ls $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	mkdir -p $(IMAGES)
@@ -116,6 +121,7 @@ define post_build
 	@[ -f $(IMAGES)/$(IM_NAME) ] || false
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
+	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TARGET)) )
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
@@ -195,15 +201,19 @@ clean_qmp:
 	cd $(BUILD_DIR)/$(TARGET) ; \
 	for d in $(QMP_FEED)/*; do make $$d/clean ; done
 
-post_build:
+post_build: checkout
 	$(call post_build)
+
+pre_build: checkout
+	$(call pre_build)
+
 
 list_targets:
 	$(info $(HW_AVAILABLE))
 	@exit 0
 
 config:
-	select HW in $(HW_AVAILABLE); do break; done; echo $$HW > .config.tmp;
+	@select HW in $(HW_AVAILABLE); do break; done; echo $$HW > .config.tmp;
 	mv .config.tmp .config
 
 help:
