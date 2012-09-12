@@ -33,6 +33,7 @@ MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
 QMP_FEED = package/feeds/qmp_packages
+COMMUNITY ?= qMp
 J ?= 1
 V ?= 0
 T =
@@ -46,13 +47,9 @@ TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
 $(eval $(if $(TARGET),,TARGET=$(T)))
 
-#Getting output image names
-IMAGE_PATH = $(shell echo $(IMAGE) | cut -d' ' -f1 )
-SIMAGE_PATH = $(shell echo $(SYSUPGRADE) | cut -d' ' -f1 )
-IM_NAME = $(shell echo $(IMAGE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(TIMESTAMP)/g )
-$(eval $(if $(IM_NAME),,IM_NAME=$(NAME)-factory-$(TIMESTAMP).bin))
-SIM_NAME = $(shell echo $(SYSUPGRADE) | grep ' ' | cut -d' ' -f2 | sed s/TIMESTAMP/$(TIMESTAMP)/g )
-$(eval $(if $(SIM_NAME),,SIM_NAME=$(NAME)-sysupgrade-$(TIMESTAMP).bin))
+#Getting output image paths
+IMAGE_PATH = $(IMAGE)
+SIMAGE_PATH = $(SYSUPGRADE)
 
 CONFIG = $(BUILD_DIR)/$(TARGET)/.config
 KCONFIG = $(BUILD_DIR)/$(TARGET)/target/linux/$(ARCH)/config-*
@@ -107,6 +104,9 @@ define kmenuconfig_owrt
 endef
 
 define post_build
+	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2))
+	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-factory-$(TIMESTAMP).bin)
+	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-sysupgrade-$(TIMESTAMP).bin)
 	$(eval COMP=$(shell ls $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
@@ -214,5 +214,5 @@ build: checkout
 	$(call post_build)
 
 all: build
-
 default: build
+world: build
