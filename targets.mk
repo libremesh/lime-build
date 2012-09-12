@@ -120,13 +120,6 @@ ifeq ($(T),wispstation)
   IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt5-squashfs.bin
 endif
 
-ifeq ($(T),fonera)
-  NAME:=Fonera
-  ARCH:=atheros
-  IMAGE:=bin/$(ARCH)/openwrt-atheros-root.squashfs $(NAME)-TIMESTAMP-root.squashfs
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-atheros-vmlinux.lzma $(NAME)-TIMESTAMP-vmlinux.lzma
-endif
-
 ifeq ($(T),bullet)
   NAME:=Bullet
   override TARGET:=nsm5
