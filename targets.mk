@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro nsm5 nsm2 tplink2543 tplink841 tplink842 tplinkN750 freestation rocket bullet wpe72
+HW_AVAILABLE := alix rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
@@ -61,7 +61,7 @@ ifeq ($(T),freestation)
   override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
 endif
 
-ifeq ($(T),tplink2543)
+ifeq ($(T),tl-2543)
   NAME:=Tplink2543
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-factory.bin
@@ -70,7 +70,7 @@ ifeq ($(T),tplink2543)
   override OWRT_PKG_SVN = -r 32353 svn://svn.openwrt.org/openwrt/packages
 endif
 
-ifeq ($(T),tplink842)
+ifeq ($(T),tl-842)
   NAME:=Tplink842
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin
@@ -79,7 +79,7 @@ ifeq ($(T),tplink842)
   override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
 
-ifeq ($(T),tplink841)
+ifeq ($(T),tl-841)
   NAME:=Tplink841
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-factory.bin
@@ -88,7 +88,7 @@ ifeq ($(T),tplink841)
   override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
 
-ifeq ($(T),tplinkN750)
+ifeq ($(T),tl-N750)
   NAME:=TplinkN750
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-factory.bin
@@ -97,6 +97,14 @@ ifeq ($(T),tplinkN750)
   override OWRT_PKG_SVN = -r 32638 svn://svn.openwrt.org/openwrt/packages
 endif
 
+ifeq ($(T),tl-mr3020)
+  NAME:=TplinkMR3020
+  ARCH:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
+  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
+  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
+endif
 
 ifeq ($(T),wpe72)
   NAME:=CompexWPE72
