@@ -221,6 +221,7 @@ help:
 	cat README | more || true
 
 build: checkout
+	$(call pre_build)
 	$(if $(TARGET),$(call build_src))
 	$(call post_build)
 
