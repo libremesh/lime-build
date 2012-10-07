@@ -23,9 +23,9 @@ DAYS_TO_PRESERVE="10"
 
 [ ! $FORCE ] && [ "$(cd build/qmp && git pull)" == "Already up-to-date." ] && { echo "Nothing to compile, qMp in last version"; exit 0; }
 
+make update_all
+
 for t in $TARGETS; do
-	echo "Updating feeds"
-	make T=$t update_feeds
 
 	echo "Syncronizing configuration..."
 	make T=$t sync_config
