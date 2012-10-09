@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72
+HW_AVAILABLE := alix rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72 pico2
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
@@ -126,5 +126,11 @@ ifeq ($(T),bullet)
   ARCH:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),pico2)
+  NAME:=PicoStation2
+  ARCH:=atheros
+  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt2-pico2-squashfs.bin
 endif
 
