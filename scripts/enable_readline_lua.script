@@ -1,0 +1,16 @@
+#!/bin/bash
+# This scripts enables readline suport for LUA comandline console
+# It creates some extra dependences but it is useful for testing
+# Arrow keys can be used for instance
+
+TARGETS="alix"
+
+[ "$1" != "POST_BUILD" ] && exit 0
+
+shift
+TARGET="$1"
+
+[ -z "$TARGET" ] || [ ! -d "build/$TARGET" ] && exit 1
+[[ "$TARGETS" =~ "$TARGET" ]] || exit 2
+
+rm -f build/$TARGET/package/lua/patches/100-no_readline.patch
