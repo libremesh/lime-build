@@ -150,6 +150,8 @@ define target_error
 	@exit 1
 endef
 
+all: build
+
 .checkout_qmp:
 	@[ "$(DEV)" == "1" ] && echo "Using developer enviroment" || true
 	git clone $(QMP_GIT) $(BUILD_DIR)/qmp
@@ -224,7 +226,3 @@ build: checkout
 	$(call pre_build)
 	$(if $(TARGET),$(call build_src))
 	$(call post_build)
-
-all: build
-default: build
-world: build
