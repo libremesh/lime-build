@@ -21,9 +21,17 @@ DAYS_TO_PRESERVE="10"
 # If FORCE is 1, compilation process will be forced
 [ -z "$FORCE" ] && FORCE=0
 
-[ ! $FORCE ] && [ "$(cd build/qmp && git pull)" == "Already up-to-date." ] && { echo "Nothing to compile, qMp in last version"; exit 0; }
+[ $FORCE -eq 0 ] && {
+	if cd build/qmp && git diff-index --quiet HEAD --
+	   then
+	   echo "Nothing to compile, qMp in last version"
+	   exit 0
+	fi
+}
 
 make update_all
+
+cd build/qmp && git checkout $BRANCH
 
 for t in $TARGETS; do
 
@@ -33,9 +41,12 @@ for t in $TARGETS; do
 	echo "Compiling target $t"
 	nice -n 25 make T=$t build J=2 QMP_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
 
-	[ $? -ne 0 ] && [ ! -z "$MAIL" ] && echo "Error detected during QMP compilation process" | mail -s "[qMp] build system" $MAIL
+	[ $? -ne 0 ] && [ ! -z "$MAIL" ] && 
+	  echo "Error detected during QMP compilation process" | mail -s "[qMp] build system" $MAIL
 done
 
-find images/ -iname "*.bin" -type f -mtime +$DAYS_TO_PRESERVE -exec rm -f '{}' \;
+[ $DAYS_TO_PRESERVE -gt 0 ] && 
+  find images/ -iname "*.bin" -type f -mtime +$DAYS_TO_PRESERVE -exec rm -f '{}' \;
+  
 cd images && md5sum *.bin > IMAGES
 
