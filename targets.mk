@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-HW_AVAILABLE := alix rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72 pico2
+HW_AVAILABLE := alix vbox rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72 pico2
 
 ifeq ($(T),rspro)
   NAME:=RouterStationPro
@@ -28,6 +28,15 @@ ifeq ($(T),alix)
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
 endif
+
+ifeq ($(T),vbox)
+  NAME:=VBox
+  ARCH:=x86
+  override TARGET:=alix
+  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext2.vdi
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext2.vdi
+endif
+
 
 ifeq ($(T),nsm5)
   NAME:=NanoStationM5
