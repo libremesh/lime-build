@@ -22,7 +22,7 @@ DAYS_TO_PRESERVE="10"
 [ -z "$FORCE" ] && FORCE=0
 
 [ $FORCE -eq 0 ] && {
-	if cd build/qmp && git diff-index --quiet HEAD --
+	if (cd build/qmp && git diff-index --quiet HEAD --)
 	   then
 	   echo "Nothing to compile, qMp in last version"
 	   exit 0
@@ -31,12 +31,9 @@ DAYS_TO_PRESERVE="10"
 
 make update_all
 
-cd build/qmp && git checkout $BRANCH
+(cd build/qmp && git checkout $BRANCH)
 
 for t in $TARGETS; do
-
-	echo "Syncronizing configuration..."
-	make T=$t sync_config
 
 	echo "Compiling target $t"
 	nice -n 25 make T=$t build J=2 QMP_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
@@ -48,5 +45,5 @@ done
 [ $DAYS_TO_PRESERVE -gt 0 ] && 
   find images/ -iname "*.bin" -type f -mtime +$DAYS_TO_PRESERVE -exec rm -f '{}' \;
   
-cd images && md5sum *.bin > IMAGES
+(cd images && md5sum *.bin > IMAGES)
 
