@@ -44,46 +44,62 @@ TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
+
+#Define TARGET_CONFIGS and TARGET
+$(eval $(if $(TARGET_MASTER),TARGET_CONFIGS=$(TARGET_MASTER),TARGET_CONFIGS=$(T)))
 $(eval $(if $(TARGET),,TARGET=$(T)))
+
+#Define BUILD_PATH based on TBUILD (defined in targets.mk)
+$(eval $(if $(TBUILD),,TBUILD=$(TARGET)))
+BUILD_PATH=$(BUILD_DIR)/$(TBUILD)
 
 #Getting output image paths
 IMAGE_PATH = $(IMAGE)
 SIMAGE_PATH = $(SYSUPGRADE)
 
-CONFIG = $(BUILD_DIR)/$(TARGET)/.config
-KCONFIG = $(BUILD_DIR)/$(TARGET)/target/linux/$(ARCH)/config-*
+CONFIG = $(BUILD_PATH)/.config
+KCONFIG = $(BUILD_PATH)/target/linux/$(ARCH)/config-*
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
+
 
 define build_src
 	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2))
 	$(eval REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1))
-	make -C $(BUILD_DIR)/$(TARGET) $(MAKE_SRC) BRANCH_GIT=$(BRANCH_GIT) REV_GIT=$(REV_GIT)
+	make -C $(BUILD_PATH) $(MAKE_SRC) BRANCH_GIT=$(BRANCH_GIT) REV_GIT=$(REV_GIT)
 endef
 
 define checkout_src
-	svn --quiet co $(OWRT_SVN) $(BUILD_DIR)/$(TARGET)
+	svn --quiet co $(OWRT_SVN) $(BUILD_PATH)
 	mkdir -p dl
-	ln -fs ../../dl $(BUILD_DIR)/$(TARGET)/dl
-	ln -fs ../qmp/files $(BUILD_DIR)/$(TARGET)/files
+	ln -fs ../../dl $(BUILD_PATH)/dl
+	ln -fs ../qmp/files $(BUILD_PATH)/files
 	ln -fs $(BUILD_DIR)/qmp/files
-	rm -rf $(BUILD_DIR)/$(TARGET)/feeds/
-	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(TARGET)/
-	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
+	rm -rf $(BUILD_PATH)/feeds/
+	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_PATH)/
+	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_PATH)/feeds.conf
 endef
 
 define checkout_owrt_pkg_override
 	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages.$(TARGET)
-	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_DIR)/$(TARGET)/feeds.conf
+	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_PATH)/feeds.conf
 endef
 
 define copy_config
-	cp -f $(CONFIG_DIR)/$(TARGET)/config $(CONFIG) || echo "WARNING: Config file not found!"
-	cd $(BUILD_DIR)/$(TARGET) && ./scripts/diffconfig.sh > .config.tmp
-	cp -f $(BUILD_DIR)/$(TARGET)/.config.tmp $(BUILD_DIR)/$(TARGET)/.config
-	cd $(BUILD_DIR)/$(TARGET) && make defconfig
-	[ -f $(CONFIG_DIR)/$(TARGET)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET)/kernel_config >> $(CONFIG) || true
+	@echo "Syncronizing new configuration"
+	cp -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found!"
+	cd $(BUILD_PATH) && ./scripts/diffconfig.sh > .config.tmp
+	cp -f $(BUILD_PATH)/.config.tmp $(BUILD_PATH)/.config
+	cd $(BUILD_PATH) && make defconfig
+	[ -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
+
+define copy_myconfig
+	@echo "Syncronizing configuration from previous one"
+	@cp -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
+    @[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
+endef
+
 
 define update_feeds
 	@echo "Updating feed $(1)"
@@ -92,35 +108,35 @@ define update_feeds
 endef
 
 define menuconfig_owrt
-	make -C $(BUILD_DIR)/$(TARGET) menuconfig
+	make -C $(BUILD_PATH) menuconfig
 	mkdir -p $(MY_CONFIGS)/$(TARGET)
 	cp -f $(CONFIG) $(MY_CONFIGS)/$(TARGET)/config
 endef
 
 define kmenuconfig_owrt
-	make -C $(BUILD_DIR)/$(TARGET) kernel_menuconfig
+	make -C $(BUILD_PATH) kernel_menuconfig
 	mkdir -p $(MY_CONFIGS)/$(TARGET)
 	cp -f $(KCONFIG) $(MY_CONFIGS)/$(TARGET)/kernel_config
 endef
 
 define pre_build
-	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) PRE_BUILD $(TARGET)) )
+	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) PRE_BUILD $(TBUILD) $(TARGET)) )
 endef
 
 define post_build
 	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2))
 	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-factory-$(TIMESTAMP).bin)
 	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-sysupgrade-$(TIMESTAMP).bin)
-	$(eval COMP=$(shell ls $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
+	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	mkdir -p $(IMAGES)
-	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_DIR)/$(TARGET)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
-	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_DIR)/$(TARGET)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
+	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
+	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
 	@[ -f $(IMAGES)/$(IM_NAME) ] || false
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
-	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TARGET)) )
+	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
@@ -131,9 +147,9 @@ define clean_all
 endef
 
 define clean_target
-	rm -rf $(BUILD_DIR)/$(TARGET)
-	rm -f .checkout_$(TARGET)
-	rm -rf $(BUILD_DIR)/packages.$(TARGET)
+	rm -rf $(BUILD_PATH) || true
+	rm -f .checkout_$(TBUILD) || true
+	rm -rf $(BUILD_DIR)/packages.$(TARGET) || true
 	rm -f .checkout_owrt_pkg_override_$(TARGET)
 endef
 
@@ -165,35 +181,35 @@ all: build
 	@touch .checkout_owrt_pkg_override_$(TARGET)
 
 .checkout_owrt:
-	$(if $(TARGET),,$(call target_error))
-	$(if $(wildcard .checkout_$(TARGET)),,$(call checkout_src))
+	$(if $(TBUILD),,$(call target_error))
+	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
 
 checkout: .checkout_qmp .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
-	$(if $(wildcard .checkout_$(TARGET)),,$(call update_feeds,$(TARGET)))
-	$(if $(wildcard .checkout_$(TARGET)),,$(call copy_config))
-	@touch .checkout_$(TARGET)
+	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
+	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
+	@touch .checkout_$(TBUILD)
 
 sync_config:
 	$(if $(TARGET),,$(call target_error))
-	$(call copy_config)
+	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
 update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
 
 update_all: update
-	$(if $(TARGET),$(call update_feeds,$(TARGET)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
+	$(if $(TBUILD),$(call update_feeds,$(TBUILD)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
 
-menuconfig: checkout
+menuconfig: checkout sync_config
 	$(call menuconfig_owrt)
 
-kernel_menuconfig: checkout
+kernel_menuconfig: checkout sync_config
 	$(call kmenuconfig_owrt)
 
 clean:
 	$(if $(TARGET),$(call clean_target),$(call clean_all))
 
 clean_qmp:
-	cd $(BUILD_DIR)/$(TARGET) ; \
+	cd $(BUILD_PATH) ; \
 	for d in $(QMP_FEED)/*; do make $$d/clean ; done
 
 post_build: checkout
@@ -214,7 +230,7 @@ config:
 help:
 	cat README | more || true
 
-build: checkout
+build: checkout sync_config
 	$(call pre_build)
 	$(if $(TARGET),$(call build_src))
 	$(call post_build)
