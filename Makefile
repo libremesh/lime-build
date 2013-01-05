@@ -25,8 +25,6 @@ OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_10.03.1
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
 QMP_GIT_BRANCH ?= master
-B6M_GIT = git://qmp.cat/b6m.git
-B6M_GIT_BRANCH = openwrt
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
@@ -158,11 +156,6 @@ all: build
 	cd $(BUILD_DIR)/qmp; git checkout $(QMP_GIT_BRANCH); cd ..
 	@touch $@
 
-.checkout_b6m:
-	git clone $(B6M_GIT) $(BUILD_DIR)/b6m
-	cd $(BUILD_DIR)/b6m; git checkout --track origin/$(B6M_GIT_BRANCH); cd ..
-	@touch $@
-
 .checkout_owrt_pkg:
 	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
 	@touch $@
@@ -175,7 +168,7 @@ all: build
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call checkout_src))
 
-checkout: .checkout_qmp .checkout_b6m .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
+checkout: .checkout_qmp .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
 	$(if $(wildcard .checkout_$(TARGET)),,$(call update_feeds,$(TARGET)))
 	$(if $(wildcard .checkout_$(TARGET)),,$(call copy_config))
 	@touch .checkout_$(TARGET)
@@ -184,9 +177,8 @@ sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(call copy_config)
 
-update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp .checkout_b6m
+update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
-	cd $(BUILD_DIR)/b6m && git pull
 
 update_all: update
 	$(if $(TARGET),$(call update_feeds,$(TARGET)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
@@ -226,3 +218,4 @@ build: checkout
 	$(call pre_build)
 	$(if $(TARGET),$(call build_src))
 	$(call post_build)
+
