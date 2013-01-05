@@ -1,6 +1,6 @@
 # [qMp] firmware generator (http://qmp.cat)
 #
-#    Copyright (C) 2011-2012 qmp.cat
+#    Copyright (C) 2011-2012 Routek S.L routek.net
 #
 #    Thiss program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -15,8 +15,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Contributors: Simó Albert i Beltran
-#
+#	 Author: Pau Escrich - pau@dabax.net
+#    Contributors: Simó Albert i Beltran, Agustí Moll
+
 
 #OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
 #OWRT_SVN_REV = 29592
