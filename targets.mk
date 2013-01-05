@@ -1,9 +1,22 @@
-#
+# targets.mk
 # Copyright (C) 2011 qmp.cat
 #
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
+# This is free software, licensed under the GNU General Public License v3. 
+# See LICENSE for more information.
+# 
 #
+# For each target the next variables must be defined
+#  NAME := The name of the device used for output firmware file name
+#  ARCH := The OpenWRT architecture
+#  IMAGE := The file path (relative to buildroot) to the firmware
+
+# Optional
+#  TBUILD := The buildroot directory (relative to BUILD_DIR)
+#  TARGET_MASTER := If defined the config files will be taken from the master target
+#  SYSUPGRADE := The file path (relative to buildroot) to the firmware sysupgrade image
+#
+# Any option defined in Makefile can be overrided from here, for instance
+#  override OWRT_SVN = svn://mysvn.com/owrt
 
 HW_AVAILABLE := alix vbox rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72 pico2
 
