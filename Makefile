@@ -70,6 +70,11 @@ define build_src
 	make -C $(BUILD_PATH) $(MAKE_SRC) BRANCH_GIT=$(BRANCH_GIT) REV_GIT=$(REV_GIT)
 endef
 
+define copy_feeds_file
+	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_PATH)/
+	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_PATH)/feeds.conf
+endef
+
 define checkout_src
 	svn --quiet co $(OWRT_SVN) $(BUILD_PATH)
 	mkdir -p dl
@@ -77,8 +82,7 @@ define checkout_src
 	ln -fs ../qmp/files $(BUILD_PATH)/files
 	ln -fs $(BUILD_DIR)/qmp/files
 	rm -rf $(BUILD_PATH)/feeds/
-	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_PATH)/
-	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_PATH)/feeds.conf
+	$(call copy_feeds_file)
 endef
 
 define checkout_owrt_pkg_override
@@ -98,7 +102,7 @@ endef
 define copy_myconfig
 	@echo "Syncronizing configuration from previous one"
 	@cp -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
-    @[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
+	@[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
 
 
@@ -196,9 +200,13 @@ sync_config:
 
 update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
 	cd $(BUILD_DIR)/qmp && git pull
+	$(call copy_feeds_file)
 
 update_all: update
 	$(if $(TBUILD),$(call update_feeds,$(TBUILD)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
+
+update_feeds: update
+	$(call update_feeds,$(TBUILD))
 
 menuconfig: checkout sync_config
 	$(call menuconfig_owrt)
