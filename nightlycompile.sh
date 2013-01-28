@@ -13,7 +13,7 @@ MAIL="admin@qmp.cat"
 DAYS_TO_PRESERVE="10"
 
 [ -z "$COMMUNITY" ] && COMMUNITY=qMp
-[ -z "$BRANCH" ] && BRANCH=testing
+[ -z "$BRANCH" ] && BRANCH=attitude_adjustment
 
 # If target is not specified, compiling for all targets
 [ -z "$TARGETS" ] && TARGETS="$(make list_targets)"

@@ -15,17 +15,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#	 Author: Pau Escrich - pau@dabax.net
+#    Author: Pau Escrich <p4u@dabax.net>
 #    Contributors: Simó Albert i Beltran, Agustí Moll
 
 
-#OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk
 #OWRT_SVN_REV = 29592
-OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/backfire
-OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_10.03.1
+OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/attitude_adjustment
+OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_12.09
 QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
 QMP_GIT_RO = git://qmp.cat/qmp.git
-QMP_GIT_BRANCH ?= master
+QMP_GIT_BRANCH ?= attitude_adjustment
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs

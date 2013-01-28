@@ -18,7 +18,7 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := alix vbox rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-N750 freestation rocket bullet wpe72 pico2
+HW_AVAILABLE := alix vbox rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-wdr3600 tl-mr3020 tl-wr703 freestation rocket bullet wpe72 pico2
 
 ifeq ($(T),alix)
   NAME:=Alix
@@ -32,8 +32,8 @@ ifeq ($(T),nsm5)
   NAME:=NanoStationM5
   ARCH:=ar71xx
   TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),pico2)
@@ -48,24 +48,24 @@ ifeq ($(T),rspro)
   NAME:=RouterStationPro
   ARCH:=ar71xx
   TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rspro-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rspro-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),rs)
   NAME:=RouterStation
   ARCH:=ar71xx
   TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rs-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),vbox)
   NAME:=VBox
   ARCH:=x86
   TBUILD:=x86
-  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext2.vdi
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext2.vdi
+  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
 endif
 
 ifeq ($(T),nsm2)
@@ -73,8 +73,8 @@ ifeq ($(T),nsm2)
   ARCH:=ar71xx
   TBUILD:=ar71xx
   TARGET_MASTER:=nsm5
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-nano-m-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),rocket)
@@ -82,8 +82,8 @@ ifeq ($(T),rocket)
   ARCH:=ar71xx
   TBUILD:=ar71xx
   TARGET_MASTER:=nsm5
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rocket-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-rocket-m-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),bullet)
@@ -91,8 +91,8 @@ ifeq ($(T),bullet)
   ARCH:=ar71xx
   TBUILD:=ar71xx
   TARGET_MASTER:=nsm5
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-ubnt-bullet-m-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-bullet-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-bullet-m-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),freestation)
@@ -100,71 +100,60 @@ ifeq ($(T),freestation)
   ARCH:=ramips
   IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),tl-2543)
   NAME:=Tplink2543
   ARCH:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543n-v1-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 32353 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 32353 svn://svn.openwrt.org/openwrt/packages
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),tl-842)
   NAME:=Tplink842
   ARCH:=ar71xx
-  TBUILD:=tl-84X
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31348 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
 
 ifeq ($(T),tl-841)
   NAME:=Tplink841
   ARCH:=ar71xx
-  TBUILD:=tl-84X
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31348 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31348 svn://svn.openwrt.org/openwrt/packages
 endif
 
-ifeq ($(T),tl-N750)
-  NAME:=TplinkN750
+ifeq ($(T),tl-wdr3600)
+  NAME:=TplinkWDR3600
   ARCH:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 32638 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 32638 svn://svn.openwrt.org/openwrt/packages
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),tl-mr3020)
   NAME:=TplinkMR3020
   ARCH:=ar71xx
+  TBUILD:=ar71xx_aa
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
-  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
+endif
+
+ifeq ($(T),tl-wr703)
+  NAME:=TplinkWR703n
+  ARCH:=ar71xx
+  TBUILD:=ar71xx_aa
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),wpe72)
   NAME:=CompexWPE72
   ARCH:=ar71xx
-  TBUILD:=tl-mr3020
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-wpe72-squashfs-8M-factory.img
-  override OWRT_SVN = -r 31673 svn://svn.openwrt.org/openwrt/trunk
-  override OWRT_PKG_SVN = -r 31673 svn://svn.openwrt.org/openwrt/packages
 endif
-
-ifeq ($(T),wispstation)
-  NAME:=WispStation
-  ARCH:=atheros
-  TBUILD:=atheros
-  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt5-squashfs.bin
-endif
-
 
