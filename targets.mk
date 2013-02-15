@@ -1,5 +1,5 @@
 # targets.mk
-# Copyright (C) 2011 qmp.cat
+# Copyright (C) 2011-2013 qmp.cat
 #
 # This is free software, licensed under the GNU General Public License v3. 
 # See LICENSE for more information.
@@ -18,7 +18,7 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := alix vbox rs rspro nsm5 nsm2 tl-2543 tl-841 tl-842 tl-wdr3600 tl-mr3020 tl-wr703 freestation rocket bullet wpe72 pico2
+HW_AVAILABLE := alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-841 tl-842 tl-mr3020 tl-wdr3600 tl-wr703 vbox vmware wpe72
 
 ifeq ($(T),alix)
   NAME:=Alix
@@ -26,64 +26,6 @@ ifeq ($(T),alix)
   TBUILD:=x86
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-squashfs.img
-endif
-
-ifeq ($(T),nsm5)
-  NAME:=NanoStationM5
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
-endif
-
-ifeq ($(T),pico2)
-  NAME:=PicoStation2
-  ARCH:=atheros
-  TBUILD:=atheros
-  BUILD_PATH:=$(BUILD_DIR)/atheros
-  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt2-pico2-squashfs.bin
-endif
-
-ifeq ($(T),rspro)
-  NAME:=RouterStationPro
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-sysupgrade.bin
-endif
-
-ifeq ($(T),rs)
-  NAME:=RouterStation
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-sysupgrade.bin
-endif
-
-ifeq ($(T),vbox)
-  NAME:=VBox
-  ARCH:=x86
-  TBUILD:=x86
-  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
-endif
-
-ifeq ($(T),nsm2)
-  NAME:=NanoStationM2
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  TARGET_MASTER:=nsm5
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
-endif
-
-ifeq ($(T),rocket)
-  NAME:=Rocket
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  TARGET_MASTER:=nsm5
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),bullet)
@@ -102,20 +44,62 @@ ifeq ($(T),freestation)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),nsm2)
+  NAME:=NanoStationM2
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  TARGET_MASTER:=nsm5
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),nsm5)
+  NAME:=NanoStationM5
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),pico2)
+  NAME:=PicoStation2
+  ARCH:=atheros
+  TBUILD:=atheros
+  BUILD_PATH:=$(BUILD_DIR)/atheros
+  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt2-pico2-squashfs.bin
+endif
+
+ifeq ($(T),rocket)
+  NAME:=Rocket
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  TARGET_MASTER:=nsm5
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rocket-m-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),rs)
+  NAME:=RouterStation
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rs-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),rspro)
+  NAME:=RouterStationPro
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-rspro-squashfs-sysupgrade.bin
+endif
+
 ifeq ($(T),tl-2543)
   NAME:=Tplink2543
   ARCH:=ar71xx
   TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr2543-v1-squashfs-sysupgrade.bin
-endif
-
-ifeq ($(T),tl-842)
-  NAME:=Tplink842
-  ARCH:=ar71xx
-  TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),tl-841)
@@ -126,12 +110,12 @@ ifeq ($(T),tl-841)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr841nd-v7-squashfs-sysupgrade.bin
 endif
 
-ifeq ($(T),tl-wdr3600)
-  NAME:=TplinkWDR3600
+ifeq ($(T),tl-842)
+  NAME:=Tplink842
   ARCH:=ar71xx
   TBUILD:=ar71xx
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr842n-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),tl-mr3020)
@@ -142,12 +126,36 @@ ifeq ($(T),tl-mr3020)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),tl-wdr3600)
+  NAME:=TplinkWDR3600
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3600-v1-squashfs-sysupgrade.bin
+endif
+
 ifeq ($(T),tl-wr703)
   NAME:=TplinkWR703n
   ARCH:=ar71xx
   TBUILD:=ar71xx_aa
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),vbox)
+  NAME:=VBox
+  ARCH:=x86
+  TBUILD:=x86
+  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
+endif
+
+ifeq ($(T),vmware)
+  NAME:=VMware
+  ARCH:=x86
+  TBUILD:=x86
+  IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vmdk
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vmdk
 endif
 
 ifeq ($(T),wpe72)
