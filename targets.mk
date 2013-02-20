@@ -132,6 +132,7 @@ ifeq ($(T),tl-mr3040)
   TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
+endif 
 
 ifeq ($(T),tl-wdr3600)
   NAME:=TplinkWDR3600
