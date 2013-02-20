@@ -18,7 +18,7 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-841 tl-842 tl-mr3020 tl-wdr3600 tl-wr703 vbox vmware wpe72
+HW_AVAILABLE := alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-841 tl-842 tl-mr3020 tl-mr3040 tl-wdr3600 tl-wr703 vbox vmware wpe72
 
 ifeq ($(T),alix)
   NAME:=Alix
