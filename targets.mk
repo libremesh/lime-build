@@ -137,15 +137,23 @@ endif
 ifeq ($(T),tl-mr3020)
   NAME:=TplinkMR3020
   ARCH:=ar71xx
-  TBUILD:=ar71xx_aa
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3020-v1-squashfs-sysupgrade.bin
+endif
+
+ifeq ($(T),tl-mr3040)
+  NAME:=TplinkMR3040
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
 endif
 
 ifeq ($(T),tl-wr703)
   NAME:=TplinkWR703n
   ARCH:=ar71xx
-  TBUILD:=ar71xx_aa
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wr703n-v1-squashfs-sysupgrade.bin
 endif
