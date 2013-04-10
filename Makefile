@@ -70,8 +70,10 @@ define build_src
 endef
 
 define copy_feeds_file
-	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_PATH)/
-	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_PATH)/feeds.conf
+	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
+	$(if $(FEEDS_DIR),,$(call target_error))	
+	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
+	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 endef
 
 define checkout_src
@@ -81,7 +83,7 @@ define checkout_src
 	ln -fs ../qmp/files $(BUILD_PATH)/files
 	ln -fs $(BUILD_DIR)/qmp/files
 	rm -rf $(BUILD_PATH)/feeds/
-	$(call copy_feeds_file)
+	$(call copy_feeds_file,$(TBUILD))
 endef
 
 define checkout_owrt_pkg_override
@@ -198,11 +200,17 @@ sync_config:
 	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
 update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
+	$(if $(TBUILD),,$(call target_error))
 	cd $(BUILD_DIR)/qmp && git pull
 	$(call copy_feeds_file)
 
-update_all: update
-	$(if $(TBUILD),$(call update_feeds,$(TBUILD)),$(foreach dir,$(HW_AVAILABLE),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir)))))
+update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
+	@echo Updating qMp repository
+	cd $(BUILD_DIR)/qmp && git pull
+	@echo Updating feeds config files
+	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
+	@echo Updating feeds
+	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
 
 update_feeds: update
 	$(call update_feeds,$(TBUILD))
@@ -225,7 +233,6 @@ post_build: checkout
 
 pre_build: checkout
 	$(call pre_build)
-
 
 list_targets:
 	$(info $(HW_AVAILABLE))
