@@ -2,6 +2,5 @@
 [ "$1" != "PRE_BUILD" ] && exit 0
 shift
 TBUILD="$1"
-
 [ -z "$TBUILD" ] || [ ! -d "build/$TBUILD" ] && exit 1
-cp -f scripts/files/regdb.txt build/$TBUILD/package/mac80211/files
+sed -i -e "s|@BROKEN||" build/$TBUILD/feeds/openwrt_routing/bmx6/Makefile

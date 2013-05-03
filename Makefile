@@ -15,8 +15,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Author: Pau Escrich <p4u@dabax.net>
-#    Contributors: Simó Albert i Beltran, Agustí Moll
+#    Contributors: Pau Escrich <p4u@dabax.net>, Simó Albert i Beltran, Agustí Moll
 
 
 #OWRT_SVN_REV = 29592
@@ -110,6 +109,10 @@ endef
 define update_feeds
 	@echo "Updating feed $(1)"
 	./$(BUILD_DIR)/$(1)/scripts/feeds update -a
+	
+	# Temporay patch while old bmx6 is still in OpenWRT
+	./$(BUILD_DIR)/$(1)/scripts/feeds install -a -p openwrt_routing
+	
 	./$(BUILD_DIR)/$(1)/scripts/feeds install -a
 endef
 

@@ -4,5 +4,6 @@
 #
 # All files named *.script placed in this directory will be executed during compilation process.
 # First parameter will be PRE_BUILD or POST_BUILD, so script can detect which is the current step and it can be executed or not.
-# Second parameter will be the Target for the current compilation.
-#
+# Second parameter will be the build directory relative to build/ (ex. ar71xx)
+# Third parameter will be the target name (ex. nsm5)
+# See the existing scripts to better understand the idea of this recipes
