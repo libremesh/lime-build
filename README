@@ -32,19 +32,12 @@ To see list of avaiable targets run:
     make list_targets
 
 ---------------------------------------------------------------------------------
-This will update all targets
+This will update the repositories on the target specified
 
-    make update
-
-Note that this will update only qmp and b6m source (not openwrt)
+    make update T=rspro
 
 ---------------------------------------------------------------------------------
-This will update only rspro target
-
-    make T=rspro update
-
----------------------------------------------------------------------------------
-This will update all sources (qmp, openwrt feeds and eighennet)
+This will update all sources
 
     make update_all
 
@@ -120,4 +113,5 @@ There are several directories and files. This is the functionallity for each of 
 
     - files: directories and files inside will be directly copied to the root of the system image
 
+	- scripts: special directory to execute arbitrari script before and/or after the compilation process, see scripts/README
 
