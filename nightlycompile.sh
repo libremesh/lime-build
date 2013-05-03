@@ -22,7 +22,7 @@ DAYS_TO_PRESERVE="10"
 [ -z "$FORCE" ] && FORCE=0
 
 [ $FORCE -eq 0 ] && {
-	if (cd build/qmp && git diff-index --quiet HEAD --)
+	if make is_up_to_date QMP_GIT_BRANCH=$BRANCH >& /dev/null
 	   then
 	   echo "Nothing to compile, qMp in last version"
 	   exit 0

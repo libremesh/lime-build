@@ -173,6 +173,14 @@ define target_error
 	@exit 1
 endef
 
+define get_git_local_revision
+	git rev-parse origin/$1
+endef
+
+define get_git_remote_revision
+	git ls-remote origin $1 | awk 'NR==1{print $$1}'
+endef
+
 all: build
 
 .checkout_qmp:
@@ -253,3 +261,5 @@ build: checkout sync_config
 	$(if $(TARGET),$(call build_src))
 	$(call post_build)
 
+is_up_to_date:
+	cd $(BUILD_DIR)/qmp && test "$$($(call get_git_local_revision,$(QMP_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(QMP_GIT_BRANCH)))"
