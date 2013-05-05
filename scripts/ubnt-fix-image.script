@@ -8,8 +8,7 @@ UBNT_TARGETS="nsm5 rocket nsm2 bullet"
 [ "$1" != "PRE_BUILD" ] && exit 0
 
 shift
-TBUILD="$2"
-
+TBUILD="$1"
 shift
 TARGET="$1"
 
