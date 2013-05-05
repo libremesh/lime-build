@@ -18,7 +18,7 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-703n tl-841 tl-842 tl-mr3020 tl-mr3040 tl-wdr3600 tl-wdr4300 vbox vmware wpe72
+HW_AVAILABLE := alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-703n tl-841 tl-842 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3600 tl-wdr4300 vbox vmware wpe72
 TBUILD_LIST := x86 ar71xx ramips atheros
 
 ifeq ($(T),alix)
@@ -143,6 +143,15 @@ ifeq ($(T),tl-mr3040)
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
 endif 
+
+ifeq ($(T),tl-mr3040-cam)
+  NAME:=TplinkMR3040CamStreaming
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
+endif 
+
 
 ifeq ($(T),tl-wdr3600)
   NAME:=TplinkWDR3600
