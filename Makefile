@@ -1,6 +1,6 @@
-# [qMp] firmware generator (http://qmp.cat)
+# LibreMesh firmware generator (http://libre-mesh.org)
 #
-#    Copyright (C) 2011-2012 Routek S.L routek.net
+#    Copyright (C) 2011-2012 libre-mesh.org
 #
 #    Thiss program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,16 +21,16 @@
 #OWRT_SVN_REV = 29592
 OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/attitude_adjustment
 OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_12.09
-QMP_GIT_RW = ssh://gitosis@qmp.cat:221/qmp.git
-QMP_GIT_RO = git://qmp.cat/qmp.git
-QMP_GIT_BRANCH ?= master
+LIME_GIT_RW = git@github.com:libremesh/lime-build.git
+LIME_GIT_RO = git://github.com/libremesh/lime-build.git
+LIME_GIT_BRANCH ?= master
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
-QMP_FEED = package/feeds/qmp_packages
-COMMUNITY ?= qMp
+LIME_FEED = package/feeds/lime_packages
+COMMUNITY ?= LiMe
 SCRIPTS_DIR= scripts
 J ?= 1
 V ?= 0
@@ -42,7 +42,7 @@ include targets.mk
 TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
-$(eval $(if $(DEV),QMP_GIT=$(QMP_GIT_RW),QMP_GIT=$(QMP_GIT_RO)))
+$(eval $(if $(DEV),LIME_GIT=$(LIME_GIT_RW),LIME_GIT=$(LIME_GIT_RO)))
 
 #Define TARGET_CONFIGS and TARGET
 $(eval $(if $(TARGET_MASTER),TARGET_CONFIGS=$(TARGET_MASTER),TARGET_CONFIGS=$(T)))
@@ -59,19 +59,19 @@ SIMAGE_PATH = $(SYSUPGRADE)
 CONFIG = $(BUILD_PATH)/.config
 KCONFIG = $(BUILD_PATH)/target/linux/$(ARCH)/config-*
 
-.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_qmp
+.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_lime
 
 
 define build_src
-	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2))
-	$(eval REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git --no-pager log -n 1 --oneline|cut -d " " -f 1))
+	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git branch|grep ^*|cut -d " " -f 2))
+	$(eval REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git --no-pager log -n 1 --oneline|cut -d " " -f 1))
 	make -C $(BUILD_PATH) $(MAKE_SRC) BRANCH_GIT=$(BRANCH_GIT) REV_GIT=$(REV_GIT)
 endef
 
 define copy_feeds_file
 	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
 	$(if $(FEEDS_DIR),,$(call target_error))	
-	cp -f $(BUILD_DIR)/qmp/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
+	cp -f $(BUILD_DIR)/lime/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 endef
 
@@ -79,8 +79,8 @@ define checkout_src
 	svn --quiet co $(OWRT_SVN) $(BUILD_PATH)
 	mkdir -p dl
 	ln -fs ../../dl $(BUILD_PATH)/dl
-	ln -fs ../qmp/files $(BUILD_PATH)/files
-	ln -fs $(BUILD_DIR)/qmp/files
+	ln -fs ../lime/files $(BUILD_PATH)/files
+	ln -fs $(BUILD_DIR)/lime/files
 	rm -rf $(BUILD_PATH)/feeds/
 	$(call copy_feeds_file,$(TBUILD))
 endef
@@ -133,7 +133,7 @@ define pre_build
 endef
 
 define post_build
-	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/qmp/.git branch|grep ^*|cut -d " " -f 2))
+	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git branch|grep ^*|cut -d " " -f 2))
 	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-factory-$(TIMESTAMP).bin)
 	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-sysupgrade-$(TIMESTAMP).bin)
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
@@ -146,7 +146,7 @@ define post_build
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
-	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
+	@echo "LiMe firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
 define clean_all
@@ -183,10 +183,10 @@ endef
 
 all: build
 
-.checkout_qmp:
+.checkout_lime:
 	@[ "$(DEV)" == "1" ] && echo "Using developer enviroment" || true
-	git clone $(QMP_GIT) $(BUILD_DIR)/qmp
-	cd $(BUILD_DIR)/qmp; git checkout $(QMP_GIT_BRANCH); cd ..
+	git clone $(LIME_GIT) $(BUILD_DIR)/lime
+	cd $(BUILD_DIR)/lime; git checkout $(LIME_GIT_BRANCH); cd ..
 	@touch $@
 
 .checkout_owrt_pkg:
@@ -201,7 +201,7 @@ all: build
 	$(if $(TBUILD),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
 
-checkout: .checkout_qmp .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
+checkout: .checkout_lime .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
@@ -210,14 +210,14 @@ sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
-update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
+update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
 	$(if $(TBUILD),,$(call target_error))
-	cd $(BUILD_DIR)/qmp && git pull
+	cd $(BUILD_DIR)/lime && git pull
 	$(call copy_feeds_file)
 
-update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_qmp
-	@echo Updating qMp repository
-	cd $(BUILD_DIR)/qmp && git pull
+update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
+	@echo Updating LiMe repository
+	cd $(BUILD_DIR)/lime && git pull
 	@echo Updating feeds config files
 	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
 	@echo Updating feeds
@@ -235,9 +235,9 @@ kernel_menuconfig: checkout sync_config
 clean:
 	$(if $(TARGET),$(call clean_target),$(call clean_all))
 
-clean_qmp:
+clean_lime:
 	cd $(BUILD_PATH) ; \
-	for d in $(QMP_FEED)/*; do make $$d/clean ; done
+	for d in $(LIME_FEED)/*; do make $$d/clean ; done
 
 post_build: checkout
 	$(call post_build)
@@ -262,4 +262,4 @@ build: checkout sync_config
 	$(call post_build)
 
 is_up_to_date:
-	cd $(BUILD_DIR)/qmp && test "$$($(call get_git_local_revision,$(QMP_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(QMP_GIT_BRANCH)))"
+	cd $(BUILD_DIR)/lime && test "$$($(call get_git_local_revision,$(LIME_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(LIME_GIT_BRANCH)))"

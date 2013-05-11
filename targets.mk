@@ -1,5 +1,5 @@
 # targets.mk
-# Copyright (C) 2011-2013 qmp.cat
+# Copyright (C) 2011-2013 libre-mesh.org
 #
 # This is free software, licensed under the GNU General Public License v3. 
 # See LICENSE for more information.
