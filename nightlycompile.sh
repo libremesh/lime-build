@@ -7,12 +7,12 @@
 # 
 
 # Mail to send alerts in case something goes wrong
-MAIL="admin@qmp.cat"
+MAIL="admin@libre-mesh.org"
 
 # In the output directory, files older than this will be removed
 DAYS_TO_PRESERVE="10"
 
-[ -z "$COMMUNITY" ] && COMMUNITY=qMp
+[ -z "$COMMUNITY" ] && COMMUNITY=LiMe
 [ -z "$BRANCH" ] && BRANCH=testing
 
 # If target is not specified, compiling for all targets
@@ -22,24 +22,24 @@ DAYS_TO_PRESERVE="10"
 [ -z "$FORCE" ] && FORCE=0
 
 [ $FORCE -eq 0 ] && {
-	if make is_up_to_date QMP_GIT_BRANCH=$BRANCH >& /dev/null
+	if make is_up_to_date LIME_GIT_BRANCH=$BRANCH >& /dev/null
 	   then
-	   echo "Nothing to compile, qMp in last version"
+	   echo "Nothing to compile, LiMe in last version"
 	   exit 0
 	fi
 }
 
 make update_all
 
-(cd build/qmp && git checkout $BRANCH)
+(cd build/lime && git checkout $BRANCH)
 
 for t in $TARGETS; do
 
 	echo "Compiling target $t"
-	nice -n 25 make T=$t build J=2 QMP_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
+	nice -n 25 make T=$t build J=2 LIME_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
 
 	[ $? -ne 0 ] && [ ! -z "$MAIL" ] && 
-	  echo "Error detected during QMP compilation process" | mail -s "[qMp] build system" $MAIL
+	  echo "Error detected during LIME compilation process" | mail -s "[LiMe] build system" $MAIL
 done
 
 [ $DAYS_TO_PRESERVE -gt 0 ] && 

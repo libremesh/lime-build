@@ -7,10 +7,8 @@ CONFIG_PACKAGE_bmx6-sms=y
 CONFIG_PACKAGE_bmx6-uci-config=y
 # CONFIG_PACKAGE_dnsmasq is not set
 CONFIG_PACKAGE_dnsmasq-dhcpv6=y
-CONFIG_PACKAGE_fping=y
-CONFIG_PACKAGE_gwck-qmp=y
 CONFIG_PACKAGE_ip=y
-CONFIG_PACKAGE_iputils-ping=y
+CONFIG_PACKAGE_iputils-ping6=y
 CONFIG_PACKAGE_iwinfo=y
 CONFIG_PACKAGE_kmod-ath9k-htc=y
 CONFIG_PACKAGE_kmod-ip6-tunnel=y
@@ -45,13 +43,10 @@ CONFIG_PACKAGE_luci-proto-core=y
 CONFIG_PACKAGE_luci-sgi-cgi=y
 CONFIG_PACKAGE_luci-theme-base=y
 CONFIG_PACKAGE_luci-theme-bootstrap=y
-CONFIG_PACKAGE_luci-theme-qmp=y
 CONFIG_PACKAGE_mtr=y
 CONFIG_PACKAGE_netperf=y
 # CONFIG_PACKAGE_ppp is not set
-CONFIG_PACKAGE_qmp-system=y
-CONFIG_PACKAGE_qmp-tiny-node=y
-CONFIG_PACKAGE_radvd=y
+CONFIG_PACKAGE_lime-system=y
 CONFIG_PACKAGE_terminfo=y
 CONFIG_PACKAGE_uboot-ar71xx-nbg460n_550n_550nh=y
 CONFIG_PACKAGE_uhttpd=y

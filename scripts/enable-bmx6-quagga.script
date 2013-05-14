@@ -1,6 +1,0 @@
-#!/bin/sh
-[ "$1" != "PRE_BUILD" ] && exit 0
-shift
-TBUILD="$1"
-[ -z "$TBUILD" ] || [ ! -d "build/$TBUILD" ] && exit 1
-sed -i -e "s|@BROKEN||" build/$TBUILD/feeds/openwrt_routing/bmx6/Makefile
