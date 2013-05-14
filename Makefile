@@ -19,18 +19,17 @@
 
 
 #OWRT_SVN_REV = 29592
-OWRT_SVN = svn://svn.openwrt.org/openwrt/branches/attitude_adjustment
-OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/branches/packages_12.09
-LIME_GIT_RW = git@github.com:libremesh/lime-build.git
-LIME_GIT_RO = git://github.com/libremesh/lime-build.git
+OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk/
+OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/packages
+LIME_GIT_RW = git@github.com:libremesh/lime-packages.git
+LIME_GIT_RO = git://github.com/libremesh/lime-packages.git
 LIME_GIT_BRANCH ?= master
 BUILD_DIR = build
 CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
-LIME_FEED = package/feeds/lime_packages
-COMMUNITY ?= LiMe
+COMMUNITY ?= LibreMesh
 SCRIPTS_DIR= scripts
 J ?= 1
 V ?= 0
@@ -109,10 +108,6 @@ endef
 define update_feeds
 	@echo "Updating feed $(1)"
 	./$(BUILD_DIR)/$(1)/scripts/feeds update -a
-	
-	# Temporay patch while old bmx6 is still in OpenWRT
-	./$(BUILD_DIR)/$(1)/scripts/feeds install -a -p openwrt_routing
-	
 	./$(BUILD_DIR)/$(1)/scripts/feeds install -a
 endef
 
@@ -234,10 +229,6 @@ kernel_menuconfig: checkout sync_config
 
 clean:
 	$(if $(TARGET),$(call clean_target),$(call clean_all))
-
-clean_lime:
-	cd $(BUILD_PATH) ; \
-	for d in $(LIME_FEED)/*; do make $$d/clean ; done
 
 post_build: checkout
 	$(call post_build)
