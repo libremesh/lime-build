@@ -12,11 +12,14 @@ MAIL="admin@qmp.cat"
 # In the output directory, files older than this will be removed
 DAYS_TO_PRESERVE="10"
 
-[ -z "$COMMUNITY" ] && COMMUNITY=qMp
-[ -z "$BRANCH" ] && BRANCH=testing
+COMMUNITY=${COMMUNITY:-qMp}
+BRANCH=${BRANCH:-testing}
 
 # If target is not specified, compiling for all targets
-[ -z "$TARGETS" ] && TARGETS="$(make list_targets)"
+TARGETS=${TARGETS:-$(make list_targets)}
+
+# Targets which are not gonna be compiled
+NOTARGETS=${NOTARGETS:-}
 
 # If FORCE is 1, compilation process will be forced
 [ -z "$FORCE" ] && FORCE=0
@@ -34,7 +37,7 @@ make update_all
 (cd build/qmp && git checkout $BRANCH)
 
 for t in $TARGETS; do
-
+	[[ "$NOTARGETS" =~ "$t" ]] && continue
 	echo "Compiling target $t"
 	nice -n 25 make T=$t build J=2 QMP_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
 
