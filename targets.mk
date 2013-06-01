@@ -152,6 +152,15 @@ ifeq ($(T),tl-mr3040-cam)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
 endif 
 
+ifeq ($(T),tl-mr3040-bmx6dev)
+  NAME:=TplinkMR3040Bmx6Testing
+  ARCH:=ar71xx
+  TBUILD:=ar71xx
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
+endif 
+
+
 
 ifeq ($(T),tl-wdr3600)
   NAME:=TplinkWDR3600
