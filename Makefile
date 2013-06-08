@@ -139,10 +139,11 @@ define post_build
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -ne 1 -a -f $(IMAGES)/$(IM_NAME) ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -ne 1 -a -f $(BUILD_PATH)/$(IMAGE_PATH) ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
 	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
-	@[ -f $(IMAGES)/$(IM_NAME) ] && echo $(IM_NAME) || echo No output image configured in targets.mk
+	@[ -f $(IMAGES)/$(IM_NAME) ] || echo No output image configured in targets.mk
+	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
 	@echo "qMp firmware compiled, you can find output files in $(IMAGES) directory."
