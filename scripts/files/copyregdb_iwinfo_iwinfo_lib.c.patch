@@ -1,0 +1,18 @@
+--- package/iwinfo/src/iwinfo_lib.c.orig	2013-06-09 20:19:35.641117148 +0200
++++ package/iwinfo/src/iwinfo_lib.c	2013-06-09 20:20:38.421119157 +0200
+@@ -114,6 +114,7 @@
+ 	{ 0x434E /* CN */, "China" },
+ 	{ 0x434F /* CO */, "Colombia" },
+ 	{ 0x4352 /* CR */, "Costa Rica" },
++	{ 0x4354 /* CT */, "Catalonia (customized)" },
+ 	{ 0x4355 /* CU */, "Cuba" },
+ 	{ 0x4356 /* CV */, "Cape Verde" },
+ 	{ 0x4358 /* CX */, "Christmas Island" },
+@@ -269,6 +270,7 @@
+ 	{ 0x534D /* SM */, "San Marino" },
+ 	{ 0x534E /* SN */, "Senegal" },
+ 	{ 0x534F /* SO */, "Somalia" },
++	{ 0x5350 /* SP */, "Spain (customized)" },
+ 	{ 0x5352 /* SR */, "Suriname" },
+ 	{ 0x5354 /* ST */, "Sao Tome and Principe" },
+ 	{ 0x5356 /* SV */, "El Salvador" },
