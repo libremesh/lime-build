@@ -102,7 +102,7 @@ endef
 define menuconfig_owrt
 	make -C $(BUILD_PATH) menuconfig
 	mkdir -p $(MY_CONFIGS)/$(TARGET)
-	cp -f $(CONFIG) $(MY_CONFIGS)/$(TARGET)/config
+	( cd $(BUILD_PATH) && ./scripts/diffconfig.sh ) > $(MY_CONFIGS)/$(TARGET)/config
 endef
 
 define kmenuconfig_owrt
