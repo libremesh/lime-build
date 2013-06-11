@@ -194,6 +194,7 @@ all: build
 .checkout_owrt:
 	$(if $(TBUILD),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
+	@touch $@
 
 checkout: .checkout_lime .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
