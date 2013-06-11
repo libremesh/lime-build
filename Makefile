@@ -18,9 +18,8 @@
 #    Contributors: Pau Escrich <p4u@dabax.net>, Simó Albert i Beltran, Agustí Moll
 
 
-#OWRT_SVN_REV = 29592
-OWRT_SVN = svn://svn.openwrt.org/openwrt/trunk/
-OWRT_PKG_SVN =  svn://svn.openwrt.org/openwrt/packages
+OWRT_SCM = git clone git://nbd.name/openwrt.git
+OWRT_PKG_SCM =  git clone git://nbd.name/packages.git
 LIME_GIT_RW = git@github.com:libremesh/lime-packages.git
 LIME_GIT_RO = git://github.com/libremesh/lime-packages.git
 LIME_GIT_BRANCH ?= master
@@ -75,7 +74,7 @@ define copy_feeds_file
 endef
 
 define checkout_src
-	svn --quiet co $(OWRT_SVN) $(BUILD_PATH)
+	$(OWRT_SCM) $(BUILD_PATH)
 	mkdir -p dl
 	ln -fs ../../dl $(BUILD_PATH)/dl
 	ln -fs ../lime/files $(BUILD_PATH)/files
@@ -85,7 +84,7 @@ define checkout_src
 endef
 
 define checkout_owrt_pkg_override
-	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages.$(TARGET)
+	${OWRT_PKG_SCM} $(BUILD_DIR)/packages.$(TARGET)
 	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_PATH)/feeds.conf
 endef
 
@@ -185,11 +184,11 @@ all: build
 	@touch $@
 
 .checkout_owrt_pkg:
-	svn --quiet co ${OWRT_PKG_SVN} $(BUILD_DIR)/packages
+	${OWRT_PKG_SCM} $(BUILD_DIR)/packages
 	@touch $@
 
 .checkout_owrt_pkg_override:
-	$(if $(filter $(origin OWRT_PKG_SVN),override),$(if $(wildcard .checkout_owrt_pkg_override_$(TARGET)),,$(call checkout_owrt_pkg_override)),)
+	$(if $(filter $(origin OWRT_PKG_SCM),override),$(if $(wildcard .checkout_owrt_pkg_override_$(TARGET)),,$(call checkout_owrt_pkg_override)),)
 	@touch .checkout_owrt_pkg_override_$(TARGET)
 
 .checkout_owrt:
