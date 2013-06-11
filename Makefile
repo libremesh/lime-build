@@ -82,13 +82,14 @@ define copy_config
 	cp -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found!"
 	cd $(BUILD_PATH) && ./scripts/diffconfig.sh > .config.tmp
 	cp -f $(BUILD_PATH)/.config.tmp $(BUILD_PATH)/.config
-	cd $(BUILD_PATH) && make defconfig
+	make -C $(BUILD_PATH) defconfig
 	[ -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
 
 define copy_myconfig
 	@echo "Syncronizing configuration from previous one"
 	@cp -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
+	make -C $(BUILD_PATH) defconfig
 	@[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
 
