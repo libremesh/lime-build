@@ -47,6 +47,7 @@ endif
 ifeq ($(T),freestation)
   NAME:=Freestation
   ARCH:=ramips
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ramips-rt305x-freestation5-squashfs-sysupgrade.bin
 endif
