@@ -19,7 +19,7 @@
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
 HW_AVAILABLE := ar71xx alix bullet freestation nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-703n tl-841 tl-842 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3600 tl-wdr4300 vbox vmware wpe72
-TBUILD_LIST := x86 ar71xx ramips atheros
+TBUILD_LIST := ar71xx
 
 ifeq ($(T),ar71xx)
   NAME:=ar71xx
@@ -30,7 +30,7 @@ endif
 ifeq ($(T),alix)
   NAME:=Alix
   ARCH:=x86
-  TBUILD:=x86
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-alix2-combined-squashfs.img
 endif
@@ -72,7 +72,7 @@ endif
 ifeq ($(T),pico2)
   NAME:=PicoStation2
   ARCH:=atheros
-  TBUILD:=atheros
+  TBUILD:=ar71xx
   BUILD_PATH:=$(BUILD_DIR)/atheros
   IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt2-pico2-squashfs.bin
 endif
@@ -188,7 +188,7 @@ endif
 ifeq ($(T),vbox)
   NAME:=VBox
   ARCH:=x86
-  TBUILD:=x86
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vdi
 endif
@@ -196,7 +196,7 @@ endif
 ifeq ($(T),vmware)
   NAME:=VMware
   ARCH:=x86
-  TBUILD:=x86
+  TBUILD:=ar71xx
   IMAGE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vmdk
   SYSUPGRADE:=bin/$(ARCH)/openwrt-x86-generic-combined-ext4.vmdk
 endif
