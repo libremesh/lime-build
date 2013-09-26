@@ -39,6 +39,7 @@ MAKE_SRC = -j$(J) V=$(V)
 
 include targets.mk
 
+PROFILE ?= ath-qmp-tiny-node
 TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
@@ -91,6 +92,13 @@ define checkout_owrt_pkg_override
 endef
 
 define copy_config
+	@echo "Using profile $(PROFILE)"
+	cp -f $(CONFIG_DIR)/$(PROFILE) $(CONFIG) || echo "WARNING: Config file not found!"
+	[ -f $(CONFIG_DIR)/targets/$(TARGET) ] && cat $(CONFIG_DIR)/targets/$(TARGET) >> $(CONFIG) || true
+	cd $(BUILD_PATH) && make defconfig
+endef
+
+define copy_config_obsolete
 	@echo "Syncronizing new configuration"
 	cp -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found!"
 	cd $(BUILD_PATH) && ./scripts/diffconfig.sh > .config.tmp
@@ -104,7 +112,6 @@ define copy_myconfig
 	@cp -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
 	@[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
-
 
 define update_feeds
 	@echo "Updating feed $(1)"

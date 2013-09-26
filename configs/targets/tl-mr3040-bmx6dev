@@ -1,7 +1,3 @@
-CONFIG_TARGET_ar71xx=y
-CONFIG_TARGET_ar71xx_generic=y
-CONFIG_TARGET_ar71xx_generic_Default=y
-CONFIG_ATH_USER_REGD=y
 # CONFIG_PACKAGE_dnsmasq is not set
 CONFIG_PACKAGE_dnsmasq-dhcpv6=y
 CONFIG_PACKAGE_ip=y
