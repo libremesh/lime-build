@@ -3,7 +3,7 @@
 # This is a dummy script to be used with crontab for nighly compilations and so
 #
 # Example of usage:
-# FORCE="1" TARGETS="alix rspro" COMMUNITY="myNet" BRANCH="testing" ./nighlycompile.sh
+# FORCE="1" TARGETS="alix rspro" COMMUNITY="myNet" BRANCH="testing" ./nightlycompile.sh
 # 
 
 # Mail to send alerts in case something goes wrong
