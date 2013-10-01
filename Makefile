@@ -26,6 +26,7 @@ MAKE_SRC = -j$(J) V=$(V)
 include config.mk
 include targets.mk
 
+PROFILE ?= ath-qmp-tiny-node
 TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
@@ -78,6 +79,13 @@ define checkout_owrt_pkg_override
 endef
 
 define copy_config
+	@echo "Using profile $(PROFILE)"
+	cp -f $(CONFIG_DIR)/$(PROFILE) $(CONFIG) || echo "WARNING: Config file not found!"
+	[ -f $(CONFIG_DIR)/targets/$(TARGET) ] && cat $(CONFIG_DIR)/targets/$(TARGET) >> $(CONFIG) || true
+	cd $(BUILD_PATH) && make defconfig
+endef
+
+define copy_config_obsolete
 	@echo "Syncronizing new configuration"
 	cp -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found!"
 	cd $(BUILD_PATH) && ./scripts/diffconfig.sh > .config.tmp
@@ -92,7 +100,6 @@ define copy_myconfig
 	make -C $(BUILD_PATH) defconfig
 	@[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
-
 
 define update_feeds
 	@echo "Updating feed $(1)"
@@ -123,10 +130,10 @@ define post_build
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -ne 1 ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
+	@[ $(COMP) -ne 1 -a -f $(BUILD_PATH)/$(IMAGE_PATH) ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
 	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
-	@[ -f $(IMAGES)/$(IM_NAME) ] || false
+	@[ -f $(IMAGES)/$(IM_NAME) ] || echo No output image configured in targets.mk
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )

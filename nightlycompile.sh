@@ -3,7 +3,7 @@
 # This is a dummy script to be used with crontab for nighly compilations and so
 #
 # Example of usage:
-# FORCE="1" TARGETS="alix rspro" COMMUNITY="myNet" BRANCH="testing" ./nighlycompile.sh
+# FORCE="1" TARGETS="alix rspro" COMMUNITY="myNet" BRANCH="testing" ./nightlycompile.sh
 # 
 
 # Mail to send alerts in case something goes wrong
@@ -12,11 +12,14 @@ MAIL="admin@libre-mesh.org"
 # In the output directory, files older than this will be removed
 DAYS_TO_PRESERVE="10"
 
-[ -z "$COMMUNITY" ] && COMMUNITY=LiMe
-[ -z "$BRANCH" ] && BRANCH=testing
+COMMUNITY=${COMMUNITY:-qMp}
+BRANCH=${BRANCH:-testing}
 
 # If target is not specified, compiling for all targets
-[ -z "$TARGETS" ] && TARGETS="$(make list_targets)"
+TARGETS=${TARGETS:-$(make list_targets)}
+
+# Targets which are not gonna be compiled
+NOTARGETS=${NOTARGETS:-}
 
 # If FORCE is 1, compilation process will be forced
 [ -z "$FORCE" ] && FORCE=0
@@ -34,7 +37,7 @@ make update_all
 (cd build/lime && git checkout $BRANCH)
 
 for t in $TARGETS; do
-
+	[[ "$NOTARGETS" =~ "$t" ]] && continue
 	echo "Compiling target $t"
 	nice -n 25 make T=$t build J=2 LIME_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY
 
