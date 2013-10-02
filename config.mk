@@ -1,5 +1,5 @@
-OWRT_SCM = git clone git://nbd.name/openwrt.git
-OWRT_PKG_SCM =  git clone git://nbd.name/packages.git
+OWRT_SCM = git clone https://github.com/libre-mesh/openwrt.git
+OWRT_PKG_SCM =  git clone https://github.com/libre-mesh/openwrt-packages.git
 LIME_GIT_RW = git@github.com:libremesh/lime-packages.git
 LIME_GIT_RO = git://github.com/libremesh/lime-packages.git
 LIME_GIT_BRANCH ?= master
