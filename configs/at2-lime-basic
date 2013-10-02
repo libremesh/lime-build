@@ -1,0 +1,11 @@
+CONFIG_TARGET_atheros=y
+CONFIG_TARGET_atheros_Default=y
+CONFIG_TARGET_BOARD="atheros"
+CONFIG_DRIVER_11N_SUPPORT=y
+CONFIG_KERNEL_RELAY=y
+CONFIG_PACKAGE_lime-system=y
+CONFIG_PACKAGE_luci-app-openairview=y
+CONFIG_PACKAGE_spectral-scan-webgui=y
+CONFIG_PACKAGE_luci-mod-lime-basic=y
+CONFIG_PACKAGE_altermap-agent=y
+CONFIG_PACKAGE_kmod-ath5k=y

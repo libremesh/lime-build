@@ -1,0 +1,11 @@
+CONFIG_TARGET_x86=y
+CONFIG_TARGET_x86_alix2=y
+CONFIG_TARGET_x86_alix2_Default=y
+CONFIG_PACKAGE_lime-system=y
+CONFIG_PACKAGE_luci-app-openairview=y
+CONFIG_PACKAGE_spectral-scan-webgui=y
+CONFIG_PACKAGE_luci-mod-lime-basic=y
+CONFIG_PACKAGE_altermap-agent=y
+CONFIG_PACKAGE_kmod-ath5k=y
+CONFIG_PACKAGE_kmod-ath9k=y
+CONFIG_PACKAGE_kmod-ath9k-htc=y
