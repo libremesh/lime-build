@@ -134,7 +134,7 @@ define post_build
 	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
 	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
 	@[ -f $(IMAGES)/$(IM_NAME) ] || echo No output image configured in targets.mk
-	@[ -n $(OUTDIR)" ] && ln -s $(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$(TARGET)
+	@[ -n "$(OUTDIR)" ] && ln -s ../$(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$(TARGET)
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
@@ -194,7 +194,8 @@ all: build
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
 	@touch $@
 
-checkout: .checkout_lime .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
+checkout: .checkout_lime .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
+	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
