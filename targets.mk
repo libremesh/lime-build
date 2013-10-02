@@ -15,6 +15,8 @@
 #  TARGET_MASTER := The device will use the same options defined in his target master
 #  TBUILD := The buildroot directory (relative to BUILD_DIR)
 #  SYSUPGRADE := The file path (relative to buildroot) to the firmware sysupgrade image
+#  OUTDIR := If the output is not a single binary file but a directory (such in case of a generic architecture), 
+#    this can be specified here and a symlink will be created from images/ directory to the specified directory.
 #
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
