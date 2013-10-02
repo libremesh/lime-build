@@ -134,7 +134,7 @@ define post_build
 	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
 	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
 	@[ -f $(IMAGES)/$(IM_NAME) ] || echo No output image configured in targets.mk
-	@[ -n "$(OUTDIR)" ] && ln -s ../$(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$(TARGET)
+	@[ -n "$(OUTDIR)" ] && [ ! -e $(IMAGES)/$(TARGET) ] && ln -s ../$(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$(TARGET) || true
 	@echo $(IM_NAME)
 	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
