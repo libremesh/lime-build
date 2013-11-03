@@ -5,8 +5,8 @@
 LiMe build is a tool for developers to create a development enviroment for libre-mesh.
 Basically it consists in one Makefile, so it is called using "make" command.
 
-Read Only URL: git://github.com/libremesh/lime-build.git
-Developer URL: git@github.com:libremesh/lime-build.git
+Read Only URL: git://github.com/libre-mesh/lime-build.git
+Developer URL: git@github.com:libre-mesh/lime-build.git
 
 =================================================================================
 				Command options
