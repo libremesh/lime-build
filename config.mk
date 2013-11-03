@@ -10,3 +10,4 @@ IMAGES = images
 SHELL = bash
 COMMUNITY ?= Libre-Mesh
 SCRIPTS_DIR= scripts
+LIME_PKG_DIR = lime-packages

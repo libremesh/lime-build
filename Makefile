@@ -47,19 +47,19 @@ SIMAGE_PATH = $(SYSUPGRADE)
 CONFIG = $(BUILD_PATH)/.config
 KCONFIG = $(BUILD_PATH)/target/linux/$(ARCH)/config-*
 
-.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_lime
+.PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_lime_pkg
 
 
 define build_src
-	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git branch|grep ^*|cut -d " " -f 2))
-	$(eval REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git --no-pager log -n 1 --oneline|cut -d " " -f 1))
+	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/$(LIME_PKG_DIR)/.git branch|grep ^*|cut -d " " -f 2))
+	$(eval REV_GIT=$(shell git --git-dir=$(BUILD_DIR)/$(LIME_PKG_DIR)/.git --no-pager log -n 1 --oneline|cut -d " " -f 1))
 	make -C $(BUILD_PATH) $(MAKE_SRC) BRANCH_GIT=$(BRANCH_GIT) REV_GIT=$(REV_GIT)
 endef
 
 define copy_feeds_file
 	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
 	$(if $(FEEDS_DIR),,$(call target_error))	
-	cp -f $(BUILD_DIR)/lime/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
+	cp -f $(BUILD_DIR)/$(LIME_PKG_DIR)/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 endef
 
@@ -67,8 +67,8 @@ define checkout_src
 	$(OWRT_SCM) $(BUILD_PATH)
 	mkdir -p dl
 	ln -fs ../../dl $(BUILD_PATH)/dl
-	ln -fs ../lime/files $(BUILD_PATH)/files
-	ln -fs $(BUILD_DIR)/lime/files
+	ln -fs ../$(LIME_PKG_DIR)/files $(BUILD_PATH)/files
+	ln -fs $(BUILD_DIR)/$(LIME_PKG_DIR)/files
 	rm -rf $(BUILD_PATH)/feeds/
 	$(call copy_feeds_file,$(TBUILD))
 endef
@@ -124,7 +124,7 @@ define pre_build
 endef
 
 define post_build
-	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/lime/.git branch|grep ^*|cut -d " " -f 2))
+	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/$(LIME_PKG_DIR)/.git branch|grep ^*|cut -d " " -f 2))
 	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-factory-$(TIMESTAMP).bin)
 	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-sysupgrade-$(TIMESTAMP).bin)
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
@@ -175,10 +175,10 @@ endef
 
 all: build
 
-.checkout_lime:
+.checkout_lime_pkg:
 	@[ "$(DEV)" == "1" ] && echo "Using developer enviroment" || true
-	git clone $(LIME_GIT) $(BUILD_DIR)/lime
-	cd $(BUILD_DIR)/lime; git checkout $(LIME_GIT_BRANCH); cd ..
+	git clone $(LIME_GIT) $(BUILD_DIR)/$(LIME_PKG_DIR)
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR); git checkout $(LIME_GIT_BRANCH); cd ..
 	@touch $@
 
 .checkout_owrt_pkg:
@@ -194,7 +194,7 @@ all: build
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
 	@touch $@
 
-checkout: .checkout_lime .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
+checkout: .checkout_lime_pkg .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
@@ -204,14 +204,14 @@ sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
-update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
+update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
 	$(if $(TBUILD),,$(call target_error))
-	cd $(BUILD_DIR)/lime && git pull
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
 	$(call copy_feeds_file)
 
-update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime
+update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
 	@echo Updating LiMe repository
-	cd $(BUILD_DIR)/lime && git pull
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
 	@echo Updating feeds config files
 	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
 	@echo Updating feeds
@@ -252,4 +252,4 @@ build: checkout sync_config
 	$(call post_build)
 
 is_up_to_date:
-	cd $(BUILD_DIR)/lime && test "$$($(call get_git_local_revision,$(LIME_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(LIME_GIT_BRANCH)))"
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && test "$$($(call get_git_local_revision,$(LIME_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(LIME_GIT_BRANCH)))"
