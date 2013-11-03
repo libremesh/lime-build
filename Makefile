@@ -2,7 +2,7 @@
 #
 #    Copyright (C) 2011-2012 libre-mesh.org
 #
-#    Thiss program is free software: you can redistribute it and/or modify
+#    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -15,7 +15,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#    Contributors: Pau Escrich <p4u@dabax.net>, Simó Albert i Beltran, Agustí Moll
+#    Contributors: Pau Escrich <p4u@dabax.net>, Simó Albert i Beltran, Agustí Moll,
+#                  Gui Iribarren <gui@altermundi.net>
 
 
 J ?= 1
@@ -160,8 +161,8 @@ define clean_pkg
 endef
 
 define target_error
-	@echo "You must specify target using T var (make T=alix build)"
-	@echo "To see avialable targets run: make list_targets"
+	@echo "You must specify target using T=target (i.e. 'make T=ar71xx build')"
+	@echo "To see available targets run: make list_targets"
 	@exit 1
 endef
 
