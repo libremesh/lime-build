@@ -182,7 +182,7 @@ all: build
 	@touch $@
 
 .checkout_owrt_pkg:
-	${OWRT_PKG_SCM} $(BUILD_DIR)/packages
+	${OWRT_PKG_SCM} $(BUILD_DIR)/$(TBUILD)-packages
 	@touch $@
 
 .checkout_owrt_pkg_override:
