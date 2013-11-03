@@ -60,7 +60,8 @@ endef
 define copy_feeds_file
 	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
 	$(if $(FEEDS_DIR),,$(call target_error))	
-	cp -f $(BUILD_DIR)/$(LIME_PKG_DIR)/feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
+	cp -f feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
+	sed -i -e "s|src-link packages PATH/|src-link packages `pwd`/$(BUILD_DIR)/$(TBUILD)-|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 endef
 
