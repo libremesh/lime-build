@@ -32,6 +32,7 @@ TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),LIME_GIT=$(LIME_GIT_RW),LIME_GIT=$(LIME_GIT_RO)))
+$(eval $(if $(DEV),$(info Developer mode enabled),))
 
 #Define TARGET_CONFIGS and TARGET
 $(eval $(if $(TARGET_MASTER),TARGET_CONFIGS=$(TARGET_MASTER),TARGET_CONFIGS=$(T)))
