@@ -21,8 +21,8 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := ar71xx alix bullet nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-703n tl-841 tl-842 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3600 tl-wdr4300 vbox vmware wpe72
-TBUILD_LIST := ar71xx
+HW_AVAILABLE := ar71xx alix bullet nsm2 nsm5 pico2 rocket rs rspro tl-2543 tl-703n tl-841 tl-842 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3500 tl-wdr3600 tl-wdr4300 wpe72
+TBUILD_LIST := trunk
 
 ifeq ($(T),ar71xx)
   NAME:=ar71xx
@@ -176,6 +176,15 @@ ifeq ($(T),tl-mr3040-bmx6dev)
   IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-factory.bin
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-mr3040-v1-squashfs-sysupgrade.bin
 endif 
+
+ifeq ($(T),tl-wdr3500)
+  NAME:=TplinkWDR3500
+  ARCH:=ar71xx
+  TBUILD:=trunk
+  PROFILE:=ath-lime-basic
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3500-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-tl-wdr3500-v1-squashfs-sysupgrade.bin
+endif
 
 ifeq ($(T),tl-wdr3600)
   NAME:=TplinkWDR3600
