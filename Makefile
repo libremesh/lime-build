@@ -39,7 +39,6 @@ $(eval $(if $(TARGET_MASTER),TARGET_CONFIGS=$(TARGET_MASTER),TARGET_CONFIGS=$(T)
 $(eval $(if $(TARGET),,TARGET=$(T)))
 
 #Define BUILD_PATH based on TBUILD (defined in targets.mk)
-$(eval $(if $(TBUILD),,TBUILD=$(TARGET)))
 BUILD_PATH=$(BUILD_DIR)/$(TBUILD)
 
 #Getting output image paths
