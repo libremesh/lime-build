@@ -1,15 +1,15 @@
-
  libre-mesh.org build tool
 ===============================================================================
 
 LiMe build is a tool for developers to create a development enviroment for libre-mesh.
-Basically it consists in one Makefile, so it is called using "make" command.
+Basically it consists in one Makefile, so it is executed using the GNU "make" command.
 
 Read Only URL: git://github.com/libre-mesh/lime-build.git
 Developer URL: git@github.com:libre-mesh/lime-build.git
 
-=================================================================================
-				Command options
+CopyRight libre-mesh.org / Distributed under license GPLv3
+
+ Usage
 =================================================================================
 
 To compile a LiMe image from scratch, you need to specify the target (next example with target=rspro):
@@ -25,6 +25,14 @@ Also you can specify the number of parallel processes for compilation and the ve
 For work in developer mode (uses lime readwrite repository instead readonly one)
 
     make T=rspro DEV=1 build
+
+To use a specific branch (this should be done first time you run make)
+
+    make T=rspro LIME_GIT_BRANCH=myFeature build
+
+To change the LiMe branch once you have executed make for first time
+
+    cd build/lime-packages && git checkout myFeature
 
 ---------------------------------------------------------------------------------
 To see list of avaiable targets run:
@@ -91,8 +99,7 @@ To configure some general parameters from LiMe you can run:
 TODO: This feature is missing
 
 
-=================================================================================
-			Directory structure
+ Directory structure
 =================================================================================
 
 There are several directories and files. This is the functionallity for each of them:
@@ -113,5 +120,5 @@ There are several directories and files. This is the functionallity for each of 
 
     - files: directories and files inside will be directly copied to the root of the system image
 
-	- scripts: special directory to execute arbitrari script before and/or after the compilation process, see scripts/README
+    - scripts: special directory to execute arbitrari script before and/or after the compilation process, see scripts/README
 
