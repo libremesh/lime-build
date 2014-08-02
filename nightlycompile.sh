@@ -57,7 +57,7 @@ for t in $TARGETS; do
 	}
 
 	echo "Compiling target $t"
-	nice -n 25 make T=$t build J=$J GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY EXTRA_PACKS=$EXTRA_PACKS
+	nice -n 25 make T=$t build J=$J LIME_GIT_BRANCH=$BRANCH COMMUNITY=$COMMUNITY EXTRA_PACKS=$EXTRA_PACKS
 	[ $? -ne 0 ] && [ ! -z "$MAIL" ] && echo "Error detected during LiMe compilation process (for target $t)" | mail -s "[LiMe] build system" $MAIL 
 done
 

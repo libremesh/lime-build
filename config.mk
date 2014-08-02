@@ -9,6 +9,6 @@ CONFIG_DIR = configs
 MY_CONFIGS = $(BUILD_DIR)/configs
 IMAGES = images
 SHELL = bash
-COMMUNITY ?= Libre-Mesh
+COMMUNITY ?= LibreMesh
 SCRIPTS_DIR= scripts
 LIME_PKG_DIR = lime-packages
