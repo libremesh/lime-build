@@ -246,7 +246,7 @@ config:
 	mv .config.tmp .config
 
 help:
-	cat README | more || true
+	cat README.md | more || true
 
 build: checkout sync_config
 	$(call pre_build)
