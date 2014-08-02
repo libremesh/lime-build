@@ -32,7 +32,7 @@ EXTRA_PACKS=${EXTRA_PACKS:-}
 [ ! -f "images/IMAGES" ] && FORCE=1
 
 # Check if it is up to date
-make is_up_to_date GIT_BRANCH=$BRANCH >& /dev/null
+make is_up_to_date LIME_GIT_BRANCH=$BRANCH >& /dev/null
 [ $? -ne 0 ] && make update_all
 
 # Date of the last commit
