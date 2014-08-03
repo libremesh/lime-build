@@ -12,3 +12,4 @@ SHELL = bash
 COMMUNITY ?= LibreMesh
 SCRIPTS_DIR= scripts
 LIME_PKG_DIR = lime-packages
+TBUILD ?= trunk
