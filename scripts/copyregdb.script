@@ -1,0 +1,8 @@
+#!/bin/sh
+[ "$1" != "PRE_BUILD" ] && exit 0
+shift
+TBUILD="$1"
+
+[ -z "$TBUILD" ] || [ ! -d "build/$TBUILD" ] && exit 1
+cp -f scripts/files/regdb.txt build/$TBUILD/package/kernel/mac80211/files
+cp -f scripts/files/920-regdb.patch build/$TBUILD/package/kernel/mac80211/patches
