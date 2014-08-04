@@ -68,9 +68,9 @@ endef
 define checkout_src
 	$(OWRT_SCM) $(BUILD_PATH)
 	mkdir -p dl
+	[ ! -d files ] && mkdir files 
 	ln -fs ../../dl $(BUILD_PATH)/dl
-	ln -fs ../$(LIME_PKG_DIR)/files $(BUILD_PATH)/files
-	ln -fs $(BUILD_DIR)/$(LIME_PKG_DIR)/files
+	ln -fs ../../files $(BUILD_PATH)/files
 	rm -rf $(BUILD_PATH)/feeds/
 	$(call copy_feeds_file,$(TBUILD))
 endef
