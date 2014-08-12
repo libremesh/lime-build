@@ -32,7 +32,7 @@ To use a specific branch (this should be done first time you run make)
 
 To change the LiMe branch once you have executed make for first time
 
-    cd build/lime-packages && git checkout myFeature
+    make LIME_GIT_BRANCH="myFeature" update_all
 
 ---------------------------------------------------------------------------------
 To see list of avaiable targets run:

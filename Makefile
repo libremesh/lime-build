@@ -213,7 +213,7 @@ update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
 
 update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
 	@echo Updating LiMe repository
-	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
+	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
 	@echo Updating feeds config files
 	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
 	@echo Updating feeds
@@ -254,4 +254,6 @@ build: checkout sync_config
 	$(call post_build)
 
 is_up_to_date:
-	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && test "$$($(call get_git_local_revision,$(LIME_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(LIME_GIT_BRANCH)))"
+	@(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && \
+	test "$$($(call get_git_local_revision,$(LIME_GIT_BRANCH)))" == "$$($(call get_git_remote_revision,$(LIME_GIT_BRANCH)))";\
+	echo $$?)
