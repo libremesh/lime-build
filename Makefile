@@ -61,13 +61,13 @@ define copy_feeds_file
 	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
 	$(if $(FEEDS_DIR),,$(call target_error))	
 	cp -f feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
-	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
+	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf || true
 endef
 
 define checkout_src
 	$(OWRT_SCM) $(BUILD_PATH)
 	mkdir -p dl
-	[ ! -d files ] && mkdir files 
+	mkdir -p files
 	ln -fs ../../dl $(BUILD_PATH)/dl
 	ln -fs ../../files $(BUILD_PATH)/files
 	rm -rf $(BUILD_PATH)/feeds/
