@@ -61,7 +61,6 @@ define copy_feeds_file
 	$(if $(1),$(eval FEEDS_DIR=$(1)),$(eval FEEDS_DIR=$(TBUILD)))
 	$(if $(FEEDS_DIR),,$(call target_error))	
 	cp -f feeds.conf $(BUILD_DIR)/$(FEEDS_DIR)
-	sed -i -e "s|src-link packages PATH/|src-link packages `pwd`/$(BUILD_DIR)/$(TBUILD)-|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 	sed -i -e "s|PATH|`pwd`/$(BUILD_DIR)|" $(BUILD_DIR)/$(FEEDS_DIR)/feeds.conf
 endef
 
@@ -73,11 +72,6 @@ define checkout_src
 	ln -fs ../../files $(BUILD_PATH)/files
 	rm -rf $(BUILD_PATH)/feeds/
 	$(call copy_feeds_file,$(TBUILD))
-endef
-
-define checkout_owrt_pkg_override
-	${OWRT_PKG_SCM} $(BUILD_DIR)/packages.$(TARGET)
-	sed -i -e "s|src-link packages .*|src-link packages `pwd`/$(BUILD_DIR)/packages.$(TARGET)|" $(BUILD_PATH)/feeds.conf
 endef
 
 define copy_config
@@ -153,7 +147,6 @@ define clean_target
 	rm -rf $(BUILD_PATH) || true
 	rm -f .checkout_$(TBUILD) || true
 	rm -rf $(BUILD_DIR)/packages.$(TARGET) || true
-	rm -f .checkout_owrt_pkg_override_$(TARGET)
 endef
 
 define clean_pkg
@@ -183,20 +176,12 @@ all: build
 	cd $(BUILD_DIR)/$(LIME_PKG_DIR); git checkout $(LIME_GIT_BRANCH); cd ..
 	@touch $@
 
-.checkout_owrt_pkg:
-	${OWRT_PKG_SCM} $(BUILD_DIR)/$(TBUILD)-packages
-	@touch $@
-
-.checkout_owrt_pkg_override:
-	$(if $(filter $(origin OWRT_PKG_SCM),override),$(if $(wildcard .checkout_owrt_pkg_override_$(TARGET)),,$(call checkout_owrt_pkg_override)),)
-	@touch .checkout_owrt_pkg_override_$(TARGET)
-
 .checkout_owrt:
 	$(if $(TBUILD),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call checkout_src))
 	@touch $@
 
-checkout: .checkout_lime_pkg .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
+checkout: .checkout_lime_pkg .checkout_owrt
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
@@ -206,12 +191,12 @@ sync_config:
 	$(if $(TARGET),,$(call target_error))
 	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
-update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
+update: .checkout_lime_pkg
 	$(if $(TBUILD),,$(call target_error))
 	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
 	$(call copy_feeds_file)
 
-update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
+update_all: .checkout_lime_pkg
 	@echo Updating LiMe repository
 	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
 	@echo Updating feeds config files
