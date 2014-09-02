@@ -68,15 +68,6 @@ ifeq ($(T),nsm5)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-ubnt-nano-m-squashfs-sysupgrade.bin
 endif
 
-ifeq ($(T),pico2)
-  NAME:=PicoStation2
-  ARCH:=atheros
-  TBUILD:=barrier_breaker
-  PROFILE:=at2-lime-basic
-  BUILD_PATH:=$(BUILD_DIR)/atheros
-  IMAGE:=bin/$(ARCH)/openwrt-atheros-ubnt2-pico2-squashfs.bin
-endif
-
 ifeq ($(T),rocket)
   NAME:=Rocket
   ARCH:=ar71xx
