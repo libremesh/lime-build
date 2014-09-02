@@ -216,7 +216,7 @@ ifeq ($(T),ath-ib)
   NAME:=ar71xx
   ARCH:=ar71xx
   TBUILD:=barrier_breaker
-  PROFILE:=ath-imagebuilder
+  PROFILE:=ath-lime-basic
   override MAKE_SRC = -j$(J) V=$(V) IGNORE_ERRORS=1
   IMAGE:=bin/$(ARCH)/OpenWrt-ImageBuilder-$(ARCH)_generic-for-linux-x86_64.tar.bz2 ImageBuilder-qMp-ar71xx-x86_64.tar.bz2
 endif
