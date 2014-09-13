@@ -198,6 +198,7 @@ all: build
 
 checkout: .checkout_lime_pkg .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
 	$(if $(TARGET),,$(call target_error))
+	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
