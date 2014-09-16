@@ -126,11 +126,10 @@ define pre_build
 endef
 
 define post_build
-	$(eval BRANCH_GIT=$(shell git --git-dir=$(BUILD_DIR)/$(LIME_PKG_DIR)/.git branch|grep ^*|cut -d " " -f 2|tr [/,-] _))
-	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-factory-$(TIMESTAMP).bin)
-	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(BRANCH_GIT)-sysupgrade-$(TIMESTAMP).bin)
+	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH)-factory-$(TIMESTAMP).bin)
+	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH)-sysupgrade-$(TIMESTAMP).bin)
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
-	mkdir -p $(IMAGES)
+	@mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -ne 1 -a -f $(BUILD_PATH)/$(IMAGE_PATH) ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
 	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
