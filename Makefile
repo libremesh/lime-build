@@ -126,8 +126,9 @@ define pre_build
 endef
 
 define post_build
-	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH)-factory-$(TIMESTAMP).bin)
-	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH)-sysupgrade-$(TIMESTAMP).bin)
+	$(eval LIME_GIT_BRANCH_CLEAN=$(shell echo $(LIME_GIT_BRANCH) | tr / _ | tr - _))
+	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH_CLEAN)-factory-$(TIMESTAMP).bin)
+	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH_CLEAN)-sysupgrade-$(TIMESTAMP).bin)
 	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	@mkdir -p $(IMAGES)
 	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
