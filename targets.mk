@@ -221,6 +221,16 @@ ifeq ($(T),dragino2)
   SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-dragino2-squashfs-sysupgrade.bin
 endif
 
+ifeq ($(T),gl-inet)
+  NAME:=GlInet
+  ARCH:=ar71xx
+  TBUILD:=trunk
+  PROFILE:=ath-lime-basic
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-v1-squashfs-sysupgrade.bin
+endif
+
+
 ifeq ($(T),ath-ib)
   NAME:=ar71xx
   ARCH:=ar71xx
