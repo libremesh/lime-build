@@ -175,6 +175,15 @@ define get_git_remote_revision
 	git ls-remote origin $1 | awk 'NR==1{print $$1}'
 endef
 
+define update_all
+	@echo Updating LiMe repository
+	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
+	@echo Updating feeds config files
+	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
+	@echo Updating feeds
+	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
+endef
+
 all: build
 
 .checkout_lime_pkg:
@@ -198,7 +207,7 @@ all: build
 
 checkout: .checkout_lime_pkg .checkout_owrt .checkout_owrt_pkg .checkout_owrt_pkg_override
 	$(if $(TARGET),,$(call target_error))
-	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
+	$(if $(UPDATE),$(call update_all),)
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
@@ -213,12 +222,7 @@ update: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
 	$(call copy_feeds_file)
 
 update_all: .checkout_owrt_pkg .checkout_owrt_pkg_override .checkout_lime_pkg
-	@echo Updating LiMe repository
-	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
-	@echo Updating feeds config files
-	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
-	@echo Updating feeds
-	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
+	$(call update_all)
 
 update_feeds: update
 	$(call update_feeds,$(TBUILD))
