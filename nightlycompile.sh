@@ -32,7 +32,7 @@ FORCE=${FORCE:-0}
 [ ! -f "images/IMAGES" ] && FORCE=1
 
 # Check if it is up to date
-[ "$(make is_up_to_date LIME_GIT_BRANCH=$BRANCH)" != "0" ] && make update_all && FORCE=1
+[ "$(make is_up_to_date LIME_GIT_BRANCH=$BRANCH)" != "0" ] && make LIME_GIT_BRANCH=$BRANCH update_all && FORCE=1
 
 # Number of parallel procs
 [ -z "$J" ] && J=$(cat /proc/cpuinfo | grep -c processor)
