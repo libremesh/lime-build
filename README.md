@@ -26,13 +26,13 @@ For work in developer mode (uses lime readwrite repository instead readonly one)
 
     make T=rspro DEV=1 build
 
-To use a specific branch (this should be done first time you run make)
+To use a specific branch (UPDATE=1 is required in order to fetch the branch files)
 
-    make T=rspro LIME_GIT_BRANCH=myFeature build
+    make T=rspro LIME_GIT_BRANCH=develop UPDATE=1 build
 
-To change the LiMe branch once you have executed make for first time
+To change the LiMe branch and/or upgrade all the packages (lime and others)
 
-    make LIME_GIT_BRANCH="myFeature" update_all
+    make LIME_GIT_BRANCH=develop update_all
 
 ---------------------------------------------------------------------------------
 To see list of avaiable targets run:
