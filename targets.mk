@@ -21,7 +21,7 @@
 # Any option defined in Makefile can be overrided from here, for instance
 #  override OWRT_SVN = svn://mysvn.com/owrt
 
-HW_AVAILABLE := ar71xx alix bullet nsm2 nsm5 nsm5-xw pico2 rocket rs rspro gl-inet tl-2543 tl-703n tl-841 tl-842 tl-wr841n-v7 tl-wr841n-v8 tl-wr841n-v9 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3500 tl-wdr3600 tl-wdr4300 wpe72 dragino2 vbox ath-ib
+HW_AVAILABLE := alix bullet nsm2 nsm5 nsm5-xw pico2 rocket rs rspro gl-inet tl-2543 tl-703n tl-841 tl-842 tl-wr841n-v7 tl-wr841n-v8 tl-wr841n-v9 tl-mr3020 tl-mr3040 tl-mr3040-cam tl-wdr3500 tl-wdr3600 tl-wdr4300 wpe72 dragino2 vbox ath-ib ar71xx
 TBUILD_LIST := trunk
 
 ifeq ($(T),ar71xx)
