@@ -226,8 +226,8 @@ ifeq ($(T),gl-inet)
   ARCH:=ar71xx
   TBUILD:=trunk
   PROFILE:=ath-lime-basic
-  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-v1-squashfs-factory.bin
-  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-v1-squashfs-sysupgrade.bin
+  IMAGE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-6408A-v1-squashfs-factory.bin
+  SYSUPGRADE:=bin/$(ARCH)/openwrt-ar71xx-generic-gl-inet-6408A-v1-squashfs-sysupgrade.bin
 endif
 
 
