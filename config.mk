@@ -1,5 +1,5 @@
 DEV ?=
-OWRT_SCM = git clone https://github.com/libre-mesh/openwrt.git
+OWRT_SCM = git clone git://git.openwrt.org/15.05/openwrt.git
 LIME_GIT_RW = git@github.com:libre-mesh/lime-packages.git
 LIME_GIT_RO = git://github.com/libre-mesh/lime-packages.git
 LIME_GIT_BRANCH ?= develop
