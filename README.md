@@ -1,124 +1,112 @@
- libre-mesh.org build tool
-===============================================================================
+libre-mesh.org build tool
+=====================
+LiMe build is a tool to easy compile a libre-mesh firmware image and a development enviroment for developers.
 
-LiMe build is a tool for developers to create a development enviroment for libre-mesh.
-Basically it consists in one Makefile, so it is executed using the GNU "make" command.
-
-Read Only URL: git://github.com/libre-mesh/lime-build.git
-Developer URL: git@github.com:libre-mesh/lime-build.git
+It consists in a Makefile, so it is executed using the GNU "make" command.
 
 CopyRight libre-mesh.org / Distributed under license GPLv3
 
- Usage
-=================================================================================
+Preparing environment
+===================
+In Ubuntu/Debian 
 
-To compile a LiMe image from scratch, you need to specify the target (next example with target=rspro):
-This command will run all necessary commands to compile the image. After the compilation you can see the 
-OpenWRT code in directory: build/[target]
+    sudo apt-get install \
+    git subversion zlib1g-dev gawk flex unzip bzip2 gettext build-essential \
+    libncurses5-dev libncursesw5-dev libssl- dev binutils cpp psmisc docbook-to-man
 
-    make T=rspro build
+And if your system is 64bits
 
-Also you can specify the number of parallel processes for compilation and the verbose level:
+     sudo apt-get install gcc-multilib
 
-    make V=99 J=2 T=rspro build
 
-For work in developer mode (uses lime readwrite repository instead readonly one)
+Basic  Usage
+==========
+An example of basic usage would be:
 
-    make T=rspro DEV=1 build
+    make T=ar71xx P=generic J=4
+
+Where:
+
+* T indicates de target
+* P indicates de profile
+* J indicates the number of cores to use  
+
+Target makes reference to hardware architecture or a specific hardware device. 
+
+Profile references to a libre-mesh flavor, the generic one is the standard but each community network might has its own.
+
+To see the list of targets/profiles available type:
+
+    make info
+
+Extended  Usage
+==============
+To specify custom packages instead of the profile ones
+
+    make T=ar71xx PACKAGES="pkg1 pkg2..."
+
+To work in developer mode (uses lime read-write repository )
+
+    make DEV=1 T=ar71xx P=geneirc
 
 To use a specific branch (UPDATE=1 is required in order to fetch the branch files)
 
-    make T=rspro LIME_GIT_BRANCH=develop UPDATE=1 build
+    make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
 
-To change the LiMe branch and/or upgrade all the packages (lime and others)
 
-    make LIME_GIT_BRANCH=develop update_all
-
----------------------------------------------------------------------------------
-To see list of avaiable targets run:
-
-    make list_targets
-
----------------------------------------------------------------------------------
-This will update the repositories on the target specified
-
-    make update T=rspro
-
----------------------------------------------------------------------------------
-This will update all sources
-
-    make update_all
-
----------------------------------------------------------------------------------
 To syncronize config files from configs/ dir to existing target
 
-    make T=rspro sync_config
+    make T=ar71xx sync_config
 
----------------------------------------------------------------------------------
+------------------------------------------
 To run menuconfig (from openwrt):
 
-    make T=rspro menuconfig
+    make T=ar71xx menuconfig
 
-After that, the new config file will be applied to destination target and also it will by copied inside build/configs directory
+After that, the new config file will be applied to destination target and also it will by copied to build/configs directory
 
----------------------------------------------------------------------------------
+------------------------------------------
 To run kernel menuconfig (from openwrt), in this case config file will be not copied because it is not directly compatible with configs/target/kernel_config:
 
-    make T=rspro kernel_menuconfig
+    make T=ar71xx kernel_menuconfig
 
----------------------------------------------------------------------------------
-To run the initial checkout:
+------------------------------------------
+To run just the initial code checkout:
 
-    make T=rspro checkout
+    make T=ar71xx checkout
 
----------------------------------------------------------------------------------
-Copy images built before to output directory
 
-    make T=rspro post_build
-
----------------------------------------------------------------------------------
-To clean specific target:
-
-    make T=rspro clean
-
----------------------------------------------------------------------------------
-To clean all targets:
+------------------------------------------
+To clean all:
 
     make clean
 
----------------------------------------------------------------------------------
+------------------------------------------
 To clean just lime packages from a target
 
-    make T=rspro clean_lime
-
----------------------------------------------------------------------------------
-To configure some general parameters from LiMe you can run:
-
-    make config
-
-TODO: This feature is missing
+    make T=ar71xx clean_lime
 
 
  Directory structure
-=================================================================================
-
+================
 There are several directories and files. This is the functionallity for each of them:
 
-    - Makefile: the main makefile
+* Makefile: the main makefile
 
-    - targets.mk: file which contains all information related with targets. If you want to add a new supported device you must edit it
+* targets.mk: contains all information related with targets.
 
-    - build: here you will have all needed sources
+* profiles.mk: contains all information related with profiles.
 
-    - build/configs: if you do some change in config file using "menuconfig" option, the new config is placed here (and also in destination target)
+* build: directory with source files
 
-    - dl: download folder for OpenWRT packages
+* build/configs: if you do some change in config file using "menuconfig" option, the new config is saved here
 
-    - configs: config files for each kind of hardware. These are the default ones provided by limefw
+* dl: download folder for OpenWRT packages
 
-    - images: output directory for compiled images, each of them has a different timestamp, so you can have as many as you want
+* targets: config files for each kind of hardware. 
 
-    - files: directories and files inside will be directly copied to the root of the system image
+* output: output directory for compiled images firmwares
 
-    - scripts: special directory to execute arbitrari script before and/or after the compilation process, see scripts/README
+* files: everything inside will be directly copied to the root of the system firmware image
 
+* scripts: special directory to execute scripts before and/or after the compilation process, see scripts/README

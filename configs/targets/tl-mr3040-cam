@@ -1,9 +1,0 @@
-CONFIG_PACKAGE_kmod-i2c-core=y
-CONFIG_PACKAGE_kmod-input-core=y
-CONFIG_PACKAGE_kmod-video-core=y
-CONFIG_PACKAGE_kmod-video-uvc=y
-CONFIG_PACKAGE_kmod-video-videobuf2=y
-CONFIG_PACKAGE_libjpeg=y
-CONFIG_PACKAGE_libpthread=y
-CONFIG_PACKAGE_mjpg-streamer=y
-CONFIG_TARGET_ar71xx_generic_TLMR3040=y

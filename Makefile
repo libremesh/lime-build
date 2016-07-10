@@ -1,6 +1,6 @@
 # LibreMesh firmware generator (http://libre-mesh.org)
 #
-#    Copyright (C) 2011-2012 libre-mesh.org
+#    Copyright (C) 2013-2016 libre-mesh.org
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,29 +21,22 @@
 
 J ?= 1
 V ?= 0
-T =
+T ?= ar71xx
+P ?= generic
 MAKE_SRC = -j$(J) V=$(V)
 
 include config.mk
 include targets.mk
+include profiles.mk
 
-PROFILE ?= ath-qmp-tiny-node
 TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
 #Checking if developer mode is enabled and if target is defined before
 $(eval $(if $(DEV),LIME_GIT=$(LIME_GIT_RW),LIME_GIT=$(LIME_GIT_RO)))
 $(eval $(if $(DEV),$(info Developer mode enabled),))
 
-#Define TARGET_CONFIGS and TARGET
-$(eval $(if $(TARGET_MASTER),TARGET_CONFIGS=$(TARGET_MASTER),TARGET_CONFIGS=$(T)))
-$(eval $(if $(TARGET),,TARGET=$(T)))
-
 #Define BUILD_PATH based on TBUILD (defined in targets.mk)
 BUILD_PATH=$(BUILD_DIR)/$(TBUILD)
-
-#Getting output image paths
-IMAGE_PATH = $(IMAGE)
-SIMAGE_PATH = $(SYSUPGRADE)
 
 CONFIG = $(BUILD_PATH)/.config
 KCONFIG = $(BUILD_PATH)/target/linux/$(ARCH)/config-*
@@ -74,20 +67,16 @@ define checkout_src
 	$(call copy_feeds_file,$(TBUILD))
 endef
 
-define copy_config
-	@echo "Using profile $(PROFILE)"
-	cp -f $(CONFIG_DIR)/$(PROFILE) $(CONFIG) || echo "WARNING: Config file not found!"
-	[ -f $(CONFIG_DIR)/targets/$(TARGET) ] && cat $(CONFIG_DIR)/targets/$(TARGET) >> $(CONFIG) || true
-	cd $(BUILD_PATH) && make defconfig
+define add_profile_packages
+	@echo "Adding profile packages: $(PACKAGES)"
+	@for PKG in $(PACKAGES); do echo "CONFIG_PACKAGE_$$PKG=y" >> $(CONFIG); done
 endef
 
-define copy_config_obsolete
-	@echo "Syncronizing new configuration"
-	cp -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found!"
-	cd $(BUILD_PATH) && ./scripts/diffconfig.sh > .config.tmp
-	cp -f $(BUILD_PATH)/.config.tmp $(BUILD_PATH)/.config
+define copy_config
+	@echo "Using profile $(P)"
+	cp -f $(CONFIG_DIR)/$(T) $(CONFIG)
+	$(call add_profile_packages)
 	make -C $(BUILD_PATH) defconfig
-	[ -f $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config ] && cat $(CONFIG_DIR)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
 endef
 
 define copy_myconfig
@@ -105,48 +94,31 @@ endef
 
 define menuconfig_owrt
 	make -C $(BUILD_PATH) menuconfig
-	mkdir -p $(MY_CONFIGS)/$(TARGET)
-	( cd $(BUILD_PATH) && ./scripts/diffconfig.sh ) > $(MY_CONFIGS)/$(TARGET)/config
+	mkdir -p $(MY_CONFIGS)/$(T)
+	( cd $(BUILD_PATH) && ./scripts/diffconfig.sh ) > $(MY_CONFIGS)/$(T)/config
 endef
 
 define kmenuconfig_owrt
 	make -C $(BUILD_PATH) kernel_menuconfig
-	mkdir -p $(MY_CONFIGS)/$(TARGET)
-	cp -f $(KCONFIG) $(MY_CONFIGS)/$(TARGET)/kernel_config
+	mkdir -p $(MY_CONFIGS)/$(T)
+	cp -f $(KCONFIG) $(MY_CONFIGS)/$(T)/kernel_config
 endef
 
 define pre_build
-	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) PRE_BUILD $(TBUILD) $(TARGET)) )
 endef
 
 define post_build
 	$(eval LIME_GIT_BRANCH_CLEAN=$(shell echo $(LIME_GIT_BRANCH) | tr [:punct:] _))
-	$(eval IM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH_CLEAN)-factory-$(TIMESTAMP).bin)
-	$(eval SIM_NAME=$(NAME)-$(COMMUNITY)_$(LIME_GIT_BRANCH_CLEAN)-sysupgrade-$(TIMESTAMP).bin)
-	$(eval COMP=$(shell ls $(BUILD_PATH)/$(IMAGE_PATH) 2>/dev/null | grep -c \\.gz))
 	@mkdir -p $(IMAGES)
-	@[ $(COMP) -eq 1 ] && gunzip $(BUILD_PATH)/$(IMAGE_PATH) -c > $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -ne 1 -a -f $(BUILD_PATH)/$(IMAGE_PATH) ] && cp -f $(BUILD_PATH)/$(IMAGE_PATH) $(IMAGES)/$(IM_NAME) || true
-	@[ $(COMP) -eq 1 -a -n "$(SYSUPGRADE)" ] && gunzip $(BUILD_PATH)/$(SIMAGE_PATH) -c > $(IMAGES)/$(SIM_NAME) || true
-	@[ $(COMP) -ne 1 -a -n "$(SYSUPGRADE)" ] && cp -f $(BUILD_PATH)/$(SIMAGE_PATH) $(IMAGES)/$(SIM_NAME) || true
-	@[ -f $(IMAGES)/$(IM_NAME) ] || echo No output image configured in targets.mk
-	@[ -n "$(OUTDIR)" ] && [ ! -e $(IMAGES)/$(TARGET) ] && ln -s ../$(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$(TARGET) || true
-	@echo $(IM_NAME)
-	$(if $(SYSUPGRADE),@echo $(SIM_NAME))
-	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(TARGET)) )
+	cp -rf $(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT)
+	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(T)) )
 	@echo "LiMe firmware compiled, you can find output files in $(IMAGES) directory."
 endef
 
 define clean_all
 	rm -rf $(BUILD_DIR)/*
 	rm -f .checkout_*
-	rm -f $(IMAGES)/*
-endef
-
-define clean_target
-	rm -rf $(BUILD_PATH) || true
-	rm -f .checkout_$(TBUILD) || true
-	rm -rf $(BUILD_DIR)/packages.$(TARGET) || true
+	rm -rf $(IMAGES)/*
 endef
 
 define clean_pkg
@@ -168,15 +140,6 @@ define get_git_remote_revision
 	git ls-remote origin $1 | awk 'NR==1{print $$1}'
 endef
 
-define update_all
-	@echo Updating LiMe repository
-	(cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull && git checkout $(LIME_GIT_BRANCH) && git pull origin $(LIME_GIT_BRANCH))
-	@echo Updating feeds config files
-	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call copy_feeds_file,$(dir))))
-	@echo Updating feeds
-	$(foreach dir,$(TBUILD_LIST),$(if $(wildcard $(BUILD_DIR)/$(dir)),$(call update_feeds,$(dir))))
-endef
-
 all: build
 
 .checkout_lime_pkg:
@@ -191,23 +154,20 @@ all: build
 	@touch $@
 
 checkout: .checkout_lime_pkg .checkout_owrt
-	$(if $(TARGET),,$(call target_error))
+	$(if $(T),,$(call target_error))
 	$(if $(UPDATE),$(call update_all),)
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
 
 sync_config:
-	$(if $(TARGET),,$(call target_error))
+	$(if $(T),,$(call target_error))
 	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
 
 update: .checkout_lime_pkg
 	$(if $(TBUILD),,$(call target_error))
 	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
 	$(call copy_feeds_file)
-
-update_all: .checkout_lime_pkg
-	$(call update_all)
 
 update_feeds: update
 	$(call update_feeds,$(TBUILD))
@@ -219,7 +179,7 @@ kernel_menuconfig: checkout sync_config
 	$(call kmenuconfig_owrt)
 
 clean:
-	$(if $(TARGET),$(call clean_target),$(call clean_all))
+	$(call clean_all)
 
 post_build: checkout
 	$(call post_build)
@@ -227,8 +187,9 @@ post_build: checkout
 pre_build: checkout
 	$(call pre_build)
 
-list_targets:
-	$(info $(HW_AVAILABLE))
+info:
+	$(info (T)ARGETS -> $(TARGETS_AVAILABLE))
+	$(info (P)ROFILES -> $(PROFILES_AVAILABLE))
 	@exit 0
 
 config:
@@ -240,7 +201,7 @@ help:
 
 build: checkout sync_config
 	$(call pre_build)
-	$(if $(TARGET),$(call build_src))
+	$(if $(T),$(call build_src))
 	$(call post_build)
 
 is_up_to_date:
