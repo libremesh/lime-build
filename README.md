@@ -49,9 +49,9 @@ To work in developer mode (uses lime read-write repository )
 
     make DEV=1 T=ar71xx P=geneirc
 
-Or to use your own LiMe packages git repository (must be executed the first time make is invoked)
+Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be executed the first time make is invoked or after clean).
 
-    make LIME_GIT="http://foo.git" T=ar71xx P=generic
+    make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
 To use a specific branch (UPDATE=1 might be required in order to fetch the branch files)
 

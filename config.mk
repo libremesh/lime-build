@@ -1,6 +1,7 @@
 # config.mk
 DEV ?=
-OWRT_SCM = git clone git://git.openwrt.org/15.05/openwrt.git
+OWRT_GIT ?= git://git.openwrt.org/15.05/openwrt.git
+OWRT_SCM = git clone $(OWRT_GIT)
 LIME_GIT_RW = git@github.com:libre-mesh/lime-packages.git
 LIME_GIT_RO = git://github.com/libre-mesh/lime-packages.git
 LIME_GIT_BRANCH ?= develop
