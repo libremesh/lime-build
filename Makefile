@@ -31,9 +31,9 @@ include profiles.mk
 
 TIMESTAMP = $(shell date +%Y%m%d_%H%M)
 
-#Checking if developer mode is enabled and if target is defined before
-$(eval $(if $(DEV),LIME_GIT=$(LIME_GIT_RW),LIME_GIT=$(LIME_GIT_RO)))
-$(eval $(if $(DEV),$(info Developer mode enabled),))
+#Checking if LIME_GIT is already defined by user and developer mode is enabled
+$(eval $(if $(LIME_GIT),,$(if $(DEV),LIME_GIT=$(LIME_GIT_RW),LIME_GIT=$(LIME_GIT_RO))))
+$(info Using LiMe Git repository $(LIME_GIT))
 
 #Define BUILD_PATH based on TBUILD (defined in targets.mk)
 BUILD_PATH=$(BUILD_DIR)/$(TBUILD)
