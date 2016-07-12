@@ -15,3 +15,9 @@ ifeq ($(T),x86)
   OUTDIR:=bin/x86
 endif
 
+ifeq ($(T),mt7620)
+  ARCH:=ramips
+  OUTDIR:=bin/ramips
+endif
+
+
