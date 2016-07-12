@@ -74,7 +74,7 @@ endef
 
 define copy_config
 	@echo "Using profile $(P)"
-	cp -f $(CONFIG_DIR)/$(T) $(CONFIG)
+	@cp -f $(CONFIG_DIR)/$(T) $(CONFIG) || read -p 'WARNING: Target $(T) does not exist. Press ENTER to continue' 
 	$(call add_profile_packages)
 	make -C $(BUILD_PATH) defconfig
 endef
@@ -165,7 +165,7 @@ checkout: .checkout_lime_pkg .checkout_owrt
 
 sync_config:
 	$(if $(T),,$(call target_error))
-	$(if $(wildcard $(MY_CONFIGS)/$(TARGET_CONFIGS)), $(call copy_myconfig),$(call copy_config))
+	$(if $(wildcard $(MY_CONFIGS)/$(T)), $(call copy_myconfig),$(call copy_config))
 
 update: .checkout_lime_pkg
 	$(if $(TBUILD),,$(call target_error))
