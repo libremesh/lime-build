@@ -81,9 +81,9 @@ endef
 
 define copy_myconfig
 	@echo "Syncronizing configuration from previous one"
-	@cp -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
+	@cp -f $(MY_CONFIGS)/$(T)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
 	make -C $(BUILD_PATH) defconfig
-	@[ -f $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config ] && cat $(MY_CONFIGS)/$(TARGET_CONFIGS)/kernel_config >> $(CONFIG) || true
+	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && cat $(MY_CONFIGS)/$(T)/kernel_config >> $(CONFIG) || true
 endef
 
 define update_feeds
@@ -109,8 +109,11 @@ endef
 
 define post_build
 	$(eval LIME_GIT_BRANCH_CLEAN=$(shell echo $(LIME_GIT_BRANCH) | tr [:punct:] _))
+	$(if $(IMAGES),,$(eval IMAGES=output))
 	@mkdir -p $(IMAGES)
-	cp -rf $(BUILD_PATH)/$(OUTDIR) $(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT)
+	$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT))
+	@rm -rf $(CURRENT_OUTPUT_DIR) 2>/dev/null || true
+	cp -rf $(BUILD_PATH)/$(OUTDIR) $(CURRENT_OUTPUT_DIR)
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(T)) )
 	@echo "LiMe firmware compiled, you can find output files in $(IMAGES) directory."
 endef
