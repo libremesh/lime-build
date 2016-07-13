@@ -68,8 +68,8 @@ define checkout_src
 endef
 
 define add_profile_packages
-	@echo "Adding profile packages: $(PACKAGES)"
-	@for PKG in $(PACKAGES); do echo "CONFIG_PACKAGE_$$PKG=y" >> $(CONFIG); done
+	@echo "Adding profile packages: $(PROFILE_PACKAGES) $(PACKAGES)"
+	@for PKG in $(PROFILE_PACKAGES) $(PACKAGES); do echo "CONFIG_PACKAGE_$$PKG=y" >> $(CONFIG); done
 endef
 
 define copy_config
