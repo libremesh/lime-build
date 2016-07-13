@@ -86,6 +86,12 @@ define copy_myconfig
 	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && cat $(MY_CONFIGS)/$(T)/kernel_config >> $(CONFIG) || true
 endef
 
+define update
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git checkout $(LIME_GIT_BRANCH) && git pull
+	$(call copy_feeds_file)
+	$(call update_feeds,$(TBUILD))
+endef
+
 define update_feeds
 	@echo "Updating feed $(1)"
 	./$(BUILD_DIR)/$(1)/scripts/feeds update -a
@@ -121,7 +127,6 @@ endef
 define clean_all
 	rm -rf $(BUILD_DIR)/*
 	rm -f .checkout_*
-	rm -rf $(IMAGES)/*
 endef
 
 define clean_pkg
@@ -148,7 +153,7 @@ all: build
 .checkout_lime_pkg:
 	@[ "$(DEV)" == "1" ] && echo "Using developer enviroment" || true
 	git clone $(LIME_GIT) $(BUILD_DIR)/$(LIME_PKG_DIR)
-	cd $(BUILD_DIR)/$(LIME_PKG_DIR); git checkout $(LIME_GIT_BRANCH); cd ..
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git checkout $(LIME_GIT_BRANCH) && cd ..
 	@touch $@
 
 .checkout_owrt:
@@ -158,7 +163,7 @@ all: build
 
 checkout: .checkout_lime_pkg .checkout_owrt
 	$(if $(T),,$(call target_error))
-	$(if $(UPDATE),$(call update_all),)
+	$(if $(UPDATE),$(call update),)
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call update_feeds,$(TBUILD)))
 	$(if $(wildcard .checkout_$(TBUILD)),,$(call copy_config))
 	@touch .checkout_$(TBUILD)
@@ -169,11 +174,7 @@ sync_config:
 
 update: .checkout_lime_pkg
 	$(if $(TBUILD),,$(call target_error))
-	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git pull
-	$(call copy_feeds_file)
-
-update_feeds: update
-	$(call update_feeds,$(TBUILD))
+	$(call update)
 
 menuconfig: checkout sync_config
 	$(call menuconfig_owrt)

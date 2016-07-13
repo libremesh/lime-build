@@ -4,6 +4,11 @@ LiMe build is a tool to easy compile a libre-mesh firmware image and a developme
 
 It consists in a Makefile, so it is executed using the GNU "make" command.
 
+The idea behing LiMe build is to use one branch per lime-packages branch. 
+So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
+Note that a lime branch involves a concrete OpenWRT/LEDE branch and a concrete set of feeds.
+So using lime-build branch develop to compile lime-packages branch release 15.09 would probably result in a non working firmware.
+
 CopyRight libre-mesh.org / Distributed under license GPLv3
 
 Preparing environment
@@ -53,7 +58,8 @@ Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be exe
 
     make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
-To use a specific branch (UPDATE=1 might be required in order to fetch the branch files)
+To use a specific branch (UPDATE=1 might be required in order to fetch the branch files).
+However changing git branch might result in some error. Make sure that the current feeds file and the OpenWRT/LEDE version is compatible with such branch.
 
     make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
 
