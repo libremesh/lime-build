@@ -1,14 +1,18 @@
 # profiles.mk
-PROFILES_AVAILABLE:=generic freifunk chef
+PROFILES_AVAILABLE:=generic freifunk chef custom
 
 ifeq ($(P),generic)
-  PACKAGES:=lime-full
+  PROFILE_PACKAGES:=lime-full
 endif
 
 ifeq ($(P),freifunk)
-  PACKAGES:=lime-freifunk
+  PROFILE_PACKAGES:=lime-freifunk
 endif
 
 ifeq ($(P),chef)
-  PACKAGES:=lime-full lime-freifunk
+  PROFILE_PACKAGES:=lime-full lime-freifunk
+endif
+
+ifeq ($(P),custom)
+  PROFILE_PACKAGES:=
 endif
