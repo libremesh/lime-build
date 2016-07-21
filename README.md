@@ -6,10 +6,12 @@ It consists in a Makefile, so it is executed using the GNU "make" command.
 
 The idea behing LiMe build is to use one branch per lime-packages branch. 
 So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
-Note that a lime branch involves a concrete OpenWRT/LEDE branch and a concrete set of feeds.
-So using lime-build branch develop to compile lime-packages branch release 15.09 would probably result in a non working firmware.
+Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
+So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
 
 CopyRight libre-mesh.org / Distributed under license GPLv3
+
+Contact: [libremesh users mailing list](https://lists.libre-mesh.org/mailman/listinfo/users)
 
 Preparing environment
 ===================
