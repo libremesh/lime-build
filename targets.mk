@@ -7,23 +7,23 @@ TARGETS_AVAILABLE:=ar71xx ar71xx-mini x86 mt7620
 
 ifeq ($(T),ar71xx)
   ARCH:=ar71xx
-  OUTDIR:=bin/ar71xx
+  OUTDIR:=bin/targets/$(ARCH)/generic
 endif
 
 ifeq ($(T),ar71xx-mini)
   ARCH:=ar71xx
-  OUTDIR:=bin/ar71xx
+  OUTDIR:=bin/targets/$(ARCH)/generic
 endif
 
 
 ifeq ($(T),x86)
   ARCH:=x86
-  OUTDIR:=bin/x86
+  OUTDIR:=bin/targets/$(ARCH)/generic
 endif
 
 ifeq ($(T),mt7620)
   ARCH:=ramips
-  OUTDIR:=bin/ramips
+  OUTDIR:=bin/targets/$(ARCH)/generic
 endif
 
 
