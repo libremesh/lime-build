@@ -1,19 +1,35 @@
-libre-mesh.org build tool
+[Libre-Mesh](http://libre-mesh.org) firmware build tool
 =====================
-LiMe build is a tool to easy compile a libre-mesh firmware image and a development enviroment for developers.
+LiMe build is a tool to easily compile a customized Libre-Mesh firmware image and a development environment for developers.
 
 It consists in a Makefile, so it is executed using the GNU "make" command.
 
-The idea behing LiMe build is to use one branch per lime-packages branch. 
+The idea behind LiMe build is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
 So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
 Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
 So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
 
 CopyRight libre-mesh.org / Distributed under license GPLv3
 
-Contact: [libremesh users mailing list](https://lists.libre-mesh.org/mailman/listinfo/users)
+Get in Touch with Libre-Mesh Community
+======================================
 
-Preparing environment
+Mailing Lists
+-------------
+
+The project offers the following mailing lists
+
+* [dev@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/dev) - This list is used for general development related work.
+* [users@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/users) - This list is used for project organizational purposes. And for user specific questions.
+
+IRC Channel
+-----------
+
+The project uses an IRC channel on freenode.net
+
+* #libre-mesh - a public channel for everyone to join and participate
+
+Preparing the Compilation Environment
 ===================
 In Ubuntu/Debian 
 
@@ -21,12 +37,11 @@ In Ubuntu/Debian
     git subversion zlib1g-dev gawk flex unzip bzip2 gettext build-essential \
     libncurses5-dev libncursesw5-dev libssl- dev binutils cpp psmisc docbook-to-man
 
-And if your system is 64bits
+Additionally, if your system is 64bits
 
      sudo apt-get install gcc-multilib
 
-
-Basic  Usage
+Basic Usage
 ==========
 An example of basic usage would be:
 
@@ -46,17 +61,25 @@ To see the list of targets/profiles available type:
 
     make info
 
-Extended  Usage
+Extended Usage
 ==============
-To specify custom packages instead of the profile ones
+To compile an image for hardware with less than 4 MB of flash memory
+
+    make T=ar71xx-mini P=basic
+
+To include more packages than the profile ones
 
     make T=ar71xx PACKAGES="pkg1 pkg2..."
 
-To work in developer mode (uses lime read-write repository )
+To specify manually the list of the packages using a void profile
 
-    make DEV=1 T=ar71xx P=geneirc
+    make T=ar71xx P=custom PACKAGES="pkg1 pkg2..."
 
-Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be executed the first time make is invoked or after clean).
+To work in developer mode (uses lime read-write repository)
+
+    make DEV=1 T=ar71xx P=generic
+
+Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be executed the first time make is invoked or after a make clean).
 
     make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
@@ -65,8 +88,7 @@ However changing git branch might result in some error. Make sure that the curre
 
     make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
 
-
-To syncronize config files from configs/ dir to existing target
+To synchronize config files from configs/ dir to existing target
 
     make T=ar71xx sync_config
 
@@ -87,7 +109,6 @@ To run just the initial code checkout:
 
     make T=ar71xx checkout
 
-
 ------------------------------------------
 To clean all:
 
@@ -98,10 +119,9 @@ To clean just lime packages from a target
 
     make T=ar71xx clean_lime
 
-
- Directory structure
+Directory structure
 ================
-There are several directories and files. This is the functionallity for each of them:
+There are several directories and files. This is the functionality for each of them:
 
 * Makefile: the main makefile
 
