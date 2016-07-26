@@ -49,13 +49,13 @@ An example of basic usage would be:
 
 Where:
 
-* T indicates de target
-* P indicates de profile
+* T indicates the target
+* P indicates the profile
 * J indicates the number of cores to use  
 
 Target makes reference to hardware architecture or a specific hardware device. 
 
-Profile references to a libre-mesh flavor, the generic one is the standard but each community network might has its own.
+Profile references to a libre-mesh flavour, the generic one is the standard but each community network might has its own.
 
 To see the list of targets/profiles available type:
 
