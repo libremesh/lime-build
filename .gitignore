@@ -1,5 +1,5 @@
 .checkout*
 dl
-images
+output
 build
 .config
