@@ -1,13 +1,9 @@
 [Libre-Mesh](http://libre-mesh.org) firmware build tool
 =====================
-LiMe build is a tool to easily compile a customized Libre-Mesh firmware image and a development environment for developers.
+LiMe build is a tool to easily and locally compile a Libre-Mesh firmware image. It also creates a development environment.
 
-It consists in a Makefile, so it is executed using the GNU "make" command.
+It consists in a Makefile file, so it is executed using the GNU "make" command.
 
-The idea behind LiMe build is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
-So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
-Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
-So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
 
 CopyRight libre-mesh.org / Distributed under license GPLv3
 
@@ -35,7 +31,7 @@ In Ubuntu/Debian
 
     sudo apt-get install \
     git subversion zlib1g-dev gawk flex unzip bzip2 gettext build-essential \
-    libncurses5-dev libncursesw5-dev libssl- dev binutils cpp psmisc docbook-to-man
+    libncurses5-dev libncursesw5-dev libssl-dev binutils cpp psmisc docbook-to-man
 
 Additionally, if your system is 64bits
 
@@ -83,11 +79,6 @@ Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be exe
 
     make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
-To use a specific branch (UPDATE=1 might be required in order to fetch the branch files).
-However changing git branch might result in some error. Make sure that the current feeds file and the OpenWRT/LEDE version is compatible with such branch.
-
-    make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
-
 To synchronize config files from configs/ dir to existing target
 
     make T=ar71xx sync_config
@@ -118,6 +109,21 @@ To clean all:
 To clean just lime packages from a target
 
     make T=ar71xx clean_lime
+
+------------------------------------------
+
+Branches in _lime-build_
+------------------------
+
+The idea behind _lime-build_ is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
+So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
+
+Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
+So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
+Anyway if you want to try this you can specify which branch of _lime-packaged_ has to be used in combination with current _lime-build_ branch (UPDATE=1 might be required in order to fetch the branch files).
+
+    make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
+
 
 Directory structure
 ================
