@@ -84,7 +84,7 @@ To synchronize config files from configs/ dir to existing target
     make T=ar71xx sync_config
 
 ------------------------------------------
-To run menuconfig (from openwrt):
+If you need extra packages launch _menuconfig_ before compiling (from openwrt):
 
     make T=ar71xx menuconfig
 
@@ -117,6 +117,14 @@ Branches in _lime-build_
 
 The idea behind _lime-build_ is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
 So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
+
+The default branch is always the last stable release. If you need to compile another branch of Libre-Mesh ([list](https://github.com/libre-mesh/lime-build/branches) of the existing branches) you can easy change it using git. To list the available branches:
+
+    git branch -a
+
+To switch to a specific lime-build branch:
+
+    git checkout <your favorite branch>
 
 Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
 So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
