@@ -89,7 +89,7 @@ define copy_myconfig
 endef
 
 define update
-	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git fetch origin $(LIME_GIT_BRANCH) && git checkout $(LIME_GIT_BRANCH)
+	cd $(BUILD_DIR)/$(LIME_PKG_DIR) && git fetch origin $(LIME_GIT_BRANCH) && git checkout -B $(LIME_GIT_BRANCH) origin/$(LIME_GIT_BRANCH)
 	$(call copy_feeds_file)
 	$(call update_feeds,$(TBUILD))
 endef
