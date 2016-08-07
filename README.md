@@ -1,32 +1,43 @@
-libre-mesh.org build tool
+[Libre-Mesh](http://libre-mesh.org) firmware build tool
 =====================
-LiMe build is a tool to easy compile a libre-mesh firmware image and a development enviroment for developers.
+LiMe build is a tool to easily and locally compile a Libre-Mesh firmware image. It also creates a development environment.
 
-It consists in a Makefile, so it is executed using the GNU "make" command.
+It consists in a Makefile file, so it is executed using the GNU "make" command.
 
-The idea behing LiMe build is to use one branch per lime-packages branch. 
-So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
-Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
-So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
 
 CopyRight libre-mesh.org / Distributed under license GPLv3
 
-Contact: [libremesh users mailing list](https://lists.libre-mesh.org/mailman/listinfo/users)
+Get in Touch with Libre-Mesh Community
+======================================
 
-Preparing environment
+Mailing Lists
+-------------
+
+The project offers the following mailing lists
+
+* [dev@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/dev) - This list is used for general development related work.
+* [users@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/users) - This list is used for project organizational purposes. And for user specific questions.
+
+IRC Channel
+-----------
+
+The project uses an IRC channel on freenode.net
+
+* #libre-mesh - a public channel for everyone to join and participate
+
+Preparing the Compilation Environment
 ===================
 In Ubuntu/Debian 
 
     sudo apt-get install \
     git subversion zlib1g-dev gawk flex unzip bzip2 gettext build-essential \
-    libncurses5-dev libncursesw5-dev libssl- dev binutils cpp psmisc docbook-to-man
+    libncurses5-dev libncursesw5-dev libssl-dev binutils cpp psmisc docbook-to-man
 
-And if your system is 64bits
+Additionally, if your system is 64bits
 
      sudo apt-get install gcc-multilib
 
-
-Basic  Usage
+Basic Usage
 ==========
 An example of basic usage would be:
 
@@ -34,44 +45,46 @@ An example of basic usage would be:
 
 Where:
 
-* T indicates de target
-* P indicates de profile
+* T indicates the target
+* P indicates the profile
 * J indicates the number of cores to use  
 
 Target makes reference to hardware architecture or a specific hardware device. 
 
-Profile references to a libre-mesh flavor, the generic one is the standard but each community network might has its own.
+Profile references to a libre-mesh flavour, the generic one is the standard but each community network might has its own.
 
 To see the list of targets/profiles available type:
 
     make info
 
-Extended  Usage
+Extended Usage
 ==============
-To specify custom packages instead of the profile ones
+To compile an image for hardware with less than 4 MB of flash memory
+
+    make T=ar71xx-mini P=basic
+
+To include more packages than the profile ones
 
     make T=ar71xx PACKAGES="pkg1 pkg2..."
 
-To work in developer mode (uses lime read-write repository )
+To specify manually the list of the packages using a void profile
 
-    make DEV=1 T=ar71xx P=geneirc
+    make T=ar71xx P=custom PACKAGES="pkg1 pkg2..."
 
-Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be executed the first time make is invoked or after clean).
+To work in developer mode (uses lime read-write repository)
+
+    make DEV=1 T=ar71xx P=generic
+
+Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be executed the first time make is invoked or after a make clean).
 
     make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
-To use a specific branch (UPDATE=1 might be required in order to fetch the branch files).
-However changing git branch might result in some error. Make sure that the current feeds file and the OpenWRT/LEDE version is compatible with such branch.
-
-    make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
-
-
-To syncronize config files from configs/ dir to existing target
+To synchronize config files from configs/ dir to existing target
 
     make T=ar71xx sync_config
 
 ------------------------------------------
-To run menuconfig (from openwrt):
+If you need extra packages launch _menuconfig_ before compiling (from openwrt):
 
     make T=ar71xx menuconfig
 
@@ -87,7 +100,6 @@ To run just the initial code checkout:
 
     make T=ar71xx checkout
 
-
 ------------------------------------------
 To clean all:
 
@@ -98,10 +110,32 @@ To clean just lime packages from a target
 
     make T=ar71xx clean_lime
 
+------------------------------------------
 
- Directory structure
+Branches in _lime-build_
+------------------------
+
+The idea behind _lime-build_ is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
+So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
+
+The default branch is always the last stable release. If you need to compile another branch of Libre-Mesh ([list](https://github.com/libre-mesh/lime-build/branches) of the existing branches) you can easy change it using git. To list the available branches:
+
+    git branch -a
+
+To switch to a specific lime-build branch:
+
+    git checkout <your favorite branch>
+
+Note that a lime branch involves a specific OpenWRT/LEDE branch and also a specific set of feeds.
+So using lime-build branch develop to compile lime-packages branch release XX.YY would probably result in a non working firmware.
+Anyway if you want to try this you can specify which branch of _lime-packaged_ has to be used in combination with current _lime-build_ branch (UPDATE=1 might be required in order to fetch the branch files).
+
+    make T=ar71xx LIME_GIT_BRANCH=develop UPDATE=1
+
+
+Directory structure
 ================
-There are several directories and files. This is the functionallity for each of them:
+There are several directories and files. This is the functionality for each of them:
 
 * Makefile: the main makefile
 
