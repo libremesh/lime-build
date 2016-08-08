@@ -3,7 +3,7 @@
 #  OUTDIR := Output directory relative to the OpenWRT/LEDE root (build/src)
 #  ARCH := Architecture according OpenWRT/LEDE
 
-TARGETS_AVAILABLE:=ar71xx ar71xx-mini x86
+TARGETS_AVAILABLE:=ar71xx ar71xx-mini x86 mt7620
 
 ifeq ($(T),ar71xx)
   ARCH:=ar71xx
