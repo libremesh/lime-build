@@ -119,11 +119,11 @@ define post_build
 	$(eval LIME_GIT_BRANCH_CLEAN=$(shell echo $(LIME_GIT_BRANCH) | tr [:punct:] _))
 	$(if $(IMAGES),,$(eval IMAGES=output))
 	@mkdir -p $(IMAGES)
-	$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT))
+	$(if $(DEV),$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT)),$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)))
 	@rm -rf $(CURRENT_OUTPUT_DIR) 2>/dev/null || true
 	cp -rf $(BUILD_PATH)/$(OUTDIR) $(CURRENT_OUTPUT_DIR)
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(T)) )
-	@echo "LiMe firmware compiled, you can find output files in $(IMAGES) directory."
+	@echo "LiMe firmware compiled, you can find output files on $(CURRENT_OUTPUT_DIR) directory."
 endef
 
 define clean_all
