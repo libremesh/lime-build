@@ -39,7 +39,8 @@ $(info Using LiMe Git repository $(LIME_GIT))
 BUILD_PATH=$(BUILD_DIR)/$(TBUILD)
 
 CONFIG = $(BUILD_PATH)/.config
-KCONFIG = $(wildcard $(BUILD_PATH)/target/linux/$(ARCH)/config-*)
+TARGET_KCONFIG = target/linux/$(ARCH)
+KCONFIG = $(wildcard $(BUILD_PATH)/$(TARGET_KCONFIG)/config-*)
 
 .PHONY: checkout update clean config menuconfig kernel_menuconfig list_targets build clean_lime_pkg
 
@@ -76,7 +77,7 @@ define copy_config
 	@echo "Using profile $(P)"
 	@cp -f $(CONFIG_DIR)/$(T) $(CONFIG) || read -p 'WARNING: Target $(T) does not exist. Press ENTER to continue' 
 	$(call add_profile_packages)
-	@cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || true
+	@cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || (cd $(BUILD_PATH) && git checkout $(TARGET_KCONFIG)/config-*) || true
 	@echo "Compiling for target: $(T)"
 	make -C $(BUILD_PATH) defconfig
 endef
