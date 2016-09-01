@@ -1,6 +1,10 @@
 CONFIG_TARGET_x86=y
 CONFIG_TARGET_x86_generic=y
 CONFIG_TARGET_x86_generic_Generic=y
+CONFIG_IMAGEOPT=y
+CONFIG_VERSIONOPT=y
+CONFIG_VERSION_REPO="http://downloads.libremesh.org/community_chaos/16.07/%S/packages"
+# CONFIG_PER_FEED_REPO is not set
 CONFIG_PACKAGE_kmod-ath5k=y
 CONFIG_PACKAGE_kmod-ath9k=y
 CONFIG_PACKAGE_kmod-ath9k-htc=y
