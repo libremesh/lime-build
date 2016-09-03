@@ -79,6 +79,10 @@ Or to use your own LiMe packages git repository and/or OpenWRT/LEDE (must be exe
 
     make LIME_GIT="http://foo.git" T=ar71xx P=generic OWRT_GIT="http://foo.git"
 
+A local git directory can also be used as git repository, so you can test your commits before sending a pull-request.
+
+    make LIME_GIT="/home/user/repos/lime-packages" T=ar71xx P=generic
+
 To synchronize config files from configs/ dir to existing target
 
     make T=ar71xx sync_config
