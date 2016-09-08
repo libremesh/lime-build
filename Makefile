@@ -1,6 +1,6 @@
-# LibreMesh firmware generator (http://libre-mesh.org)
+# LibreMesh firmware generator (http://libremesh.org)
 #
-#    Copyright (C) 2013-2016 libre-mesh.org
+#    Copyright (C) 2013-2016 libremesh.org
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

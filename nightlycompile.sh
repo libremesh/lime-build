@@ -8,7 +8,7 @@
 # 
 
 # Mail to send alerts in case something goes wrong
-MAIL="admin@libre-mesh.org"
+MAIL="admin@libremesh.org"
 
 # In the output directory, files older than this will be removed
 DAYS_TO_PRESERVE="10"
