@@ -1,13 +1,13 @@
-[Libre-Mesh](http://libre-mesh.org) firmware build tool
+[LibreMesh](http://libremesh.org) firmware build tool
 =====================
-LiMe build is a tool to easily and locally compile a Libre-Mesh firmware image. It also creates a development environment.
+LiMe build is a tool to easily and locally compile a LibreMesh firmware image. It also creates a development environment.
 
 It consists in a Makefile file, so it is executed using the GNU "make" command.
 
 
-CopyRight libre-mesh.org / Distributed under license GPLv3
+CopyRight libremesh.org / Distributed under license GPLv3
 
-Get in Touch with Libre-Mesh Community
+Get in Touch with LibreMesh Community
 ======================================
 
 Mailing Lists
@@ -23,7 +23,7 @@ IRC Channel
 
 The project uses an IRC channel on freenode.net
 
-* #libre-mesh - a public channel for everyone to join and participate
+* #libremesh - a public channel for everyone to join and participate
 
 Preparing the Compilation Environment
 ===================
@@ -51,7 +51,7 @@ Where:
 
 Target makes reference to hardware architecture or a specific hardware device. 
 
-Profile references to a libre-mesh flavour, the generic one is the standard but each community network might has its own.
+Profile references to a libremesh flavour, the generic one is the standard but each community network might has its own.
 
 To see the list of targets/profiles available type:
 
@@ -115,10 +115,10 @@ To clean just lime packages from a target
 Branches in _lime-build_
 ------------------------
 
-The idea behind _lime-build_ is to use one branch per each [lime-packages](/libre-mesh/lime-packages) branch. 
+The idea behind _lime-build_ is to use one branch per each [lime-packages](/libremesh/lime-packages) branch.
 So to compile the lime-packages branch "develop" the lime-build branch develop must be used (same for releases).
 
-The default branch is always the last stable release. If you need to compile another branch of Libre-Mesh ([list](https://github.com/libre-mesh/lime-build/branches) of the existing branches) you can easy change it using git. To list the available branches:
+The default branch is always the last stable release. If you need to compile another branch of LibreMesh ([list](https://github.com/libremesh/lime-build/branches) of the existing branches) you can easy change it using git. To list the available branches:
 
     git branch -a
 
