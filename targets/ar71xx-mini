@@ -3,7 +3,7 @@ CONFIG_TARGET_ar71xx_generic=y
 CONFIG_TARGET_ar71xx_generic_Default=y
 CONFIG_IMAGEOPT=y
 CONFIG_VERSIONOPT=y
-CONFIG_VERSION_REPO="http://downloads.libremesh.org/community_chaos/16.07/%S/packages"
+CONFIG_VERSION_REPO="http://downloads.libremesh.org/community_chaos/16.07-mini/%S/packages"
 # CONFIG_PER_FEED_REPO is not set
 CONFIG_PACKAGE_dnsmasq=n
 CONFIG_PACKAGE_dnsmasq-dhcpv6=y
