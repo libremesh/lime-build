@@ -26,4 +26,9 @@ ifeq ($(T),mt7620)
   OUTDIR:=bin/targets/$(ARCH)/generic
 endif
 
+ifeq ($(T),mt7621)
+  ARCH:=ramips
+  OUTDIR:=bin/targets/$(ARCH)/mt7621
+endif
+
 
