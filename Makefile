@@ -86,7 +86,7 @@ define copy_myconfig
 	@echo "Syncronizing configuration from previous one"
 	@cp -f $(MY_CONFIGS)/$(T)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
 	make -C $(BUILD_PATH) defconfig
-	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && @cp -f $(MY_CONFIGS)/$(T)/kernel_config $(KCONFIG) || @cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || true
+	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && cp -f $(MY_CONFIGS)/$(T)/kernel_config $(KCONFIG) || cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || true
 endef
 
 define update
