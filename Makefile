@@ -1,6 +1,6 @@
-# LibreMesh firmware generator (http://libre-mesh.org)
+# LibreMesh firmware generator (http://libremesh.org)
 #
-#    Copyright (C) 2013-2016 libre-mesh.org
+#    Copyright (C) 2013-2016 libremesh.org
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ define copy_myconfig
 	@echo "Syncronizing configuration from previous one"
 	@cp -f $(MY_CONFIGS)/$(T)/config $(CONFIG) || echo "WARNING: Config file not found in $(MY_CONFIGS)!"
 	make -C $(BUILD_PATH) defconfig
-	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && @cp -f $(MY_CONFIGS)/$(T)/kernel_config $(KCONFIG) || @cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || true
+	@[ -f $(MY_CONFIGS)/$(T)/kernel_config ] && cp -f $(MY_CONFIGS)/$(T)/kernel_config $(KCONFIG) || cp -f $(CONFIG_DIR)/$(T).kernel $(KCONFIG) || true
 endef
 
 define update
@@ -122,7 +122,7 @@ define post_build
 	@mkdir -p $(IMAGES)
 	$(if $(DEV),$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)-$(REV_GIT)),$(eval CURRENT_OUTPUT_DIR=$(IMAGES)/$T-$P-$(LIME_GIT_BRANCH_CLEAN)))
 	@rm -rf $(CURRENT_OUTPUT_DIR) 2>/dev/null || true
-	cp -rf $(BUILD_PATH)/$(OUTDIR) $(CURRENT_OUTPUT_DIR)
+	cp -rpf $(BUILD_PATH)/$(OUTDIR) $(CURRENT_OUTPUT_DIR)
 	$(foreach SCRIPT, $(wildcard $(SCRIPTS_DIR)/*.script), $(shell $(SCRIPT) POST_BUILD $(TBUILD) $(T)) )
 	@echo "LiMe firmware compiled, you can find output files on $(CURRENT_OUTPUT_DIR) directory."
 endef
