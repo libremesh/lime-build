@@ -1,5 +1,5 @@
 # profiles.mk
-PROFILES_AVAILABLE:=generic basic freifunk chef custom bmx7olsr1
+PROFILES_AVAILABLE:=generic basic freifunk chef ui-ng-test custom
 
 ifeq ($(P),generic)
   PROFILE_PACKAGES:=lime-full
@@ -15,6 +15,10 @@ endif
 
 ifeq ($(P),chef)
   PROFILE_PACKAGES:=lime-full lime-freifunk
+endif
+
+ifeq ($(P),ui-ng-test)
+  PROFILE_PACKAGES:=lime-basic-uing
 endif
 
 ifeq ($(P),custom)
