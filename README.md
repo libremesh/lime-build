@@ -90,7 +90,7 @@ To synchronize config files from configs/ dir to existing target
 ------------------------------------------
 If you need extra packages launch _menuconfig_ before compiling (from openwrt):
 
-    make T=ar71xx menuconfig
+    make T=ar71xx P=generic menuconfig
 
 After that, the new config file will be applied to destination target and also it will by copied to build/configs directory
 
