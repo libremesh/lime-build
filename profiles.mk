@@ -18,7 +18,7 @@ ifeq ($(P),chef)
 endif
 
 ifeq ($(P),ui-ng-test)
-  PROFILE_PACKAGES:=lime-basic-uing
+  PROFILE_PACKAGES:=lime-basic-uing lime-debug
 endif
 
 ifeq ($(P),custom)
