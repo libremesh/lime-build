@@ -15,8 +15,8 @@ Mailing Lists
 
 The project offers the following mailing lists
 
-* [dev@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/dev) - This list is used for general development related work.
-* [users@lists.libre-mesh.org](https://lists.libre-mesh.org/mailman/listinfo/users) - This list is used for project organizational purposes. And for user specific questions.
+* [lime-dev@lists.libremesh.org](https://lists.libremesh.org/mailman/listinfo/lime-dev) - This list is used for general development related work.
+* [lime-users@lists.libremesh.org](https://lists.libremesh.org/mailman/listinfo/lime-users) - This list is used for project organizational purposes. And for user specific questions.
 
 IRC Channel
 -----------
