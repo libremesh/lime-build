@@ -1,3 +1,6 @@
+# This tool is deprecated. See lime-sdk instead
+--------------
+
 [LibreMesh](http://libremesh.org) firmware build tool
 =====================
 LiMe build is a tool to easily and locally compile a LibreMesh firmware image. It also creates a development environment.
