@@ -1,4 +1,4 @@
-# This tool is deprecated. See lime-sdk instead
+# This tool is deprecated, it does NOT compile the latest release of LibreMesh! See [lime-sdk](https://github.com/libremesh/lime-sdk) or [Chef](https://github.com/libremesh/chef) instead.
 --------------
 
 [LibreMesh](http://libremesh.org) firmware build tool
@@ -26,7 +26,7 @@ IRC Channel
 
 The project uses an IRC channel on freenode.net
 
-* #libremesh - a public channel for everyone to join and participate
+* #libremesh-dev - a public channel for everyone to join and participate
 
 Preparing the Compilation Environment
 ===================
